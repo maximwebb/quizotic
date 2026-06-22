@@ -3,9 +3,21 @@
 	<h1>Welcome team {{ cur_team.team_name }} </h1>
 	<h2>Your team leader is {{ cur_team.team_leader }} </h2>
 	<p>Your competition:</p>
-	{% for team in teams %}
-		<div>Team: {{team.team_name}} | {{team.team_leader}}</div>
-	{% endfor %}
+	<div id="team-list">
+		{% include "teams/list.html" %}
+	</div>
 </body>
+
+<script>
+const sse = new EventSource("/events/");
+
+sse.addEventListener("update", async (e) => {
+	console.log("Refreshing team list");
+	const res = await fetch("/teams/list");
+	const html = await res.text();
+
+	document.querySelector("#team-list").innerHTML = html;
+});
+</script>
 </html>
 

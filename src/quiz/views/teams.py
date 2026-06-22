@@ -19,8 +19,12 @@ def create(request):
 
 		return HttpResponseRedirect(reverse("lobby"))
 
-	print(f"Teams sesh: {request.session['team_name']}")
 	form = CreateTeamForm()
 	context = { "form": form }
 
 	return render(request, "teams/create.html", context)
+
+
+def list(request):
+	teams = Team.objects.all()
+	return render(request, "teams/list.html", { "teams": teams })
