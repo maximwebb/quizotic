@@ -18,6 +18,11 @@ sse.addEventListener("update", async (e) => {
 
 	document.querySelector("#team-list").innerHTML = html;
 });
+
+sse.addEventListener("stateChange", async (e) => {
+	console.log("Starting game");
+	window.location.replace("/game");
+});
 </script>
 </html>
 
