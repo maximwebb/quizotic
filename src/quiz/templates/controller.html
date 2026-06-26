@@ -1,17 +1,30 @@
 <head>
 <body>
+	<button onclick="newGame()">Create New Game</button>
 	<button onclick="startGame()">Start Game</button>
 	{% csrf_token %}
 </body>
 </head>
 
 <script>
+const getCsrf = () => { return document.querySelector("input").value; }
+
+const newGame = async () => {
+	const csrf = getCsrf();
+	const resp = await fetch("/controller/api", {
+		method: "PUT",
+		headers: {
+			"X-CSRFToken": csrf
+		},
+		mode: "same-origin"
+	});
+}
+
 const startGame = async () => {
 	console.log("Sending req");
-	const csrf = document.querySelector("input").value;
-	console.log(csrf);
-	const resp = await fetch("/controller", {
-		method: "PUT",
+	const csrf = getCsrf();
+	const resp = await fetch("/controller/api", {
+		method: "PATCH",
 		headers: {
 			"X-CSRFToken": csrf
 		},

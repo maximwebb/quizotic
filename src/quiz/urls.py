@@ -9,5 +9,6 @@ urlpatterns = [
 	path("teams/list", teams.list, name="team_list"),
 	path("game", game.game_view, name="game"),
 	path("controller", controller.controller_view, name="controller"),
+	path("controller/api", controller.controller_api, name="controller"),
 	path("events/", sse),
 ]
