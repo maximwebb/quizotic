@@ -1,0 +1,5 @@
+<ul>
+{% for game in games %}
+	<li>{{game.created}} | Round {{game.quiz_round}} | Question: {game.question}</li>
+{% endfor %}
+</ul>

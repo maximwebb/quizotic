@@ -1,0 +1,49 @@
+<head>
+<body>
+	<div id="game-list">
+		{% include "command/game_list.html" %}
+	</div>
+	<button onclick="newGame()">Create New Game</button>
+	<button onclick="startGame()">Start Game</button>
+	<button onclick="listGames()">List Games</button>
+	{% csrf_token %}
+</body>
+</head>
+
+<script>
+const fetch_with_csrf = async (endpoint, fields) => { 
+	const csrf = document.querySelector("input").value;
+
+	if (!fields.hasOwnProperty("headers")) {
+		fields["headers"] = {};
+	}
+
+	fields["headers"]["X-CSRFToken"] = csrf;
+	fields["mode"] = "same-origin";
+
+	return await fetch(endpoint, fields);
+}
+
+const newGame = async () => {
+	const resp = await fetch_with_csrf("/game", {
+		method: "POST",
+	});
+	const json = await resp.json();
+	console.log(json);
+}
+
+const listGames = async () => {
+	const resp = await fetch("/game", {
+		method: "GET",
+	});
+	const json = await resp.json();
+	console.log(json);
+}
+
+const startGame = async () => {
+	const resp = await fetch("/game/{game_id}/next-question", {
+		method: "POST",
+	});
+
+}
+</script>

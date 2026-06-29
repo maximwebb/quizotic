@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 
-def game_view(request):
+def quiz_view(request):
 	context = {}
-	return render(request, "game/index.html", context)
+	return render(request, "quiz/index.html", context)
