@@ -1,0 +1,80 @@
+<html>
+<body>
+<h1>Game Control Panel</h1>
+	<div id = "game-state">
+	</div>
+	<div id = "team-list">
+		{% include "../teams/list.html" %}
+	</div>
+	
+	<div id = "question-controls">
+		<button onclick="nextQuestion()">Next Question</button>
+		<button onclick="prevQuestion()">Prev Question</button>
+	</div>
+
+	<div id = "game-controls">
+		<button onclick="setRoom('lobby')">Goto Lobby</button>
+		<button onclick="setRoom('quiz')">Goto Quiz</button>
+	</div>
+	{% csrf_token %}
+</body>
+
+<script>
+const fetch_with_csrf = async (endpoint, fields={}) => { 
+	const csrf = document.querySelector("input").value;
+
+	if (!fields.hasOwnProperty("headers")) {
+		fields["headers"] = {};
+	}
+
+	fields["headers"]["X-CSRFToken"] = csrf;
+	fields["mode"] = "same-origin";
+
+	return await fetch(endpoint, fields);
+}
+
+const refreshGameState = async () => {
+	const resp = await fetch_with_csrf("{% url 'controller_game_state' game.id %}").then(r => r.text());
+	
+	document.querySelector("#game-state").innerHTML = resp;
+}
+
+const refreshTeamList = async () => {
+	const res = await fetch("/teams/list");
+	const html = await res.text();
+
+	document.querySelector("#team-list").innerHTML = html;
+};
+
+setInterval(refreshTeamList, 5000);
+
+refreshTeamList();
+refreshGameState();
+
+const nextQuestion = async () => {
+	const resp = await fetch_with_csrf("/game/{{game.id}}/next-question", {
+		method: "POST",
+	});
+
+	refreshGameState();
+}
+
+const prevQuestion = async () => {
+	const resp = await fetch_with_csrf("/game/{{game.id}}/prev-question", {
+		method: "POST",
+	});
+
+	refreshGameState();
+}
+
+const setRoom = async (room) => {
+	const resp = await fetch_with_csrf("/game/{{game.id}}/room/" + room, {
+		method: "POST",
+	});
+
+	console.log(resp);
+
+	refreshGameState();
+}
+</script>
+<html>

@@ -1,0 +1,5 @@
+<div>
+{% for game in games %}
+	<li><a href="{% url 'controller_game' game.id %}">{{game.created}} | Round {{game.quiz_round}} | Question: {{game.question}}</a></li>
+{% endfor %}
+</div>

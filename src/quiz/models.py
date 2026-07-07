@@ -14,24 +14,14 @@ class GameState(models.Model):
 	quiz_round = models.IntegerField(db_default=1)
 	question = models.IntegerField(db_default=1)
 
-	class Stage(models.IntegerChoices):
-		LOBBY = 1
-		GAME = 2
-		ROUND_END = 3
-		GAME_END = 4
+	class Room(models.IntegerChoices):
+		LOBBY = 1, "Lobby"
+		QUIZ = 2, "Quiz"
+		ROUND_END = 3, "Round End"
+		GAME_END = 4, "Game End"
 
-		def __str__(self):
-			if self == Stage.LOBBY:
-				return "Lobby"
-			elif self == Stage.GAME:
-				return "Round"
-			elif self == Stage.ROUND_END:
-				return "Round End"
-			else:
-				return "Game End"
-	
-	stage = models.IntegerField(choices=Stage, db_default=Stage.LOBBY)
+	room = models.IntegerField(choices=Room, db_default=Room.LOBBY)
 
 	def __str__(self):
-		return f"Stage: {self.stage} Round: {self.quiz_round} Question: {self.question}"
+		return f"Room: {self.room} Round: {self.quiz_round} Question: {self.question}"
 

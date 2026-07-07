@@ -1,11 +1,9 @@
 <head>
 <body>
 	<div id="game-list">
-		{% include "command/game_list.html" %}
+		{% include "controller/game_list.html" %}
 	</div>
 	<button onclick="newGame()">Create New Game</button>
-	<button onclick="startGame()">Start Game</button>
-	<button onclick="listGames()">List Games</button>
 	{% csrf_token %}
 </body>
 </head>
@@ -28,8 +26,8 @@ const newGame = async () => {
 	const resp = await fetch_with_csrf("/game", {
 		method: "POST",
 	});
-	const json = await resp.json();
-	console.log(json);
+	const game = await resp.json();
+	window.location.href += `/${game.id}`;
 }
 
 const listGames = async () => {
@@ -38,12 +36,5 @@ const listGames = async () => {
 	});
 	const json = await resp.json();
 	console.log(json);
-}
-
-const startGame = async () => {
-	const resp = await fetch("/game/{game_id}/next-question", {
-		method: "POST",
-	});
-
 }
 </script>
