@@ -52,7 +52,8 @@ refreshTeamList();
 refreshGameState();
 
 const nextQuestion = async () => {
-	const resp = await fetch_with_csrf("/game/{{game.id}}/next-question", {
+	// const resp = await fetch_with_csrf("/game/{{game.id}}/next-question", {
+	const resp = await fetch_with_csrf("{% url 'game_action' game.id 'next-question' %}", {
 		method: "POST",
 	});
 
@@ -60,7 +61,7 @@ const nextQuestion = async () => {
 }
 
 const prevQuestion = async () => {
-	const resp = await fetch_with_csrf("/game/{{game.id}}/prev-question", {
+	const resp = await fetch_with_csrf("{% url 'game_action' game.id 'prev-question' %}", {
 		method: "POST",
 	});
 
@@ -68,6 +69,7 @@ const prevQuestion = async () => {
 }
 
 const setRoom = async (room) => {
+	// TODO: Lookup how to substitute javascript variable into django template
 	const resp = await fetch_with_csrf("/game/{{game.id}}/room/" + room, {
 		method: "POST",
 	});

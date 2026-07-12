@@ -1,4 +1,4 @@
-from .views import lobby, teams, views, index, quiz, controller
+from .views import lobby, teams, views, index, quiz, controller, question
 from .events import sse
 
 from django.urls import path, include
@@ -17,5 +17,6 @@ urlpatterns = [
 	path("game/<int:game_id>/room/<str:room>", controller.game_room, name="game_room"),
 	path("game/<int:game_id>", controller.game, name="game"),
 	path("game", controller.game, name="game_list"),
+    path("setup", question.setup, name="setup"),
 	path("events/", sse),
 ]
