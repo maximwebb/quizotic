@@ -17,5 +17,6 @@ urlpatterns = [
 	path("game/<int:game_id>/room/<str:room>", controller.game_room, name="game_room"),
 	path("game/<int:game_id>", controller.game, name="game"),
 	path("game", controller.game, name="game_list"),
+	path("create-quiz", controller.create_quiz_from_file, name="create_quiz"),
 	path("events/", sse),
 ]

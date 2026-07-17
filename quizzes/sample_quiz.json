@@ -1,0 +1,86 @@
+{
+	"name": "Sample Quiz",
+	"rounds": [
+		{
+			"name": "Trivia",
+			"questions": [
+				{
+					"type": "mcq",
+					"prompt": "What is the capital of Australia?",
+					"choices": [
+						"Sydney",
+						"Melbourne",
+						"Canberra",
+						"Perth"
+					],
+					"answer": "Canberra"
+				},
+				{
+					"type": "mcq",
+					"prompt": "Who is the president of France?",
+					"choices": [
+						"Emmanuel Macron",
+						"Dua Lipa",
+						"Franz Kafka",
+						"John Cleese"
+					],
+					"answer": "Emmanuel Macron"
+				}
+			]
+		},
+		{
+			"name": "Science",
+			"questions": [
+				{
+					"type": "mcq",
+					"prompt": "Which of these is not a state of matter?",
+					"choices": [
+						"Gas",
+						"Liquid",
+						"Marmite",
+						"Solid"
+					],
+					"answer": "Marmite"
+				},
+				{
+					"type": "mcq",
+					"prompt": "What is the largest planet?",
+					"choices": [
+						"Earth",
+						"Venus",
+						"Jupiter",
+						"The moon"
+					],
+					"answer": "Jupiter"
+				}
+			]
+		},
+		{
+			"name": "German",
+			"questions": [
+				{
+					"type": "mcq",
+					"prompt": "Was ist Brot im Englisch?",
+					"choices": [
+						"Gas",
+						"Liquid",
+						"Bread",
+						"Solid"
+					],
+					"answer": "Bread"
+				},
+				{
+					"type": "mcq",
+					"prompt": "Was ist Apple in Deutsch?",
+					"choices": [
+						"Earth",
+						"Venus",
+						"Jupiter",
+						"Apfel"
+					],
+					"answer": "Apfel"
+				}
+			]
+		}
+	]
+}

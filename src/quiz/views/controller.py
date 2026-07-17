@@ -1,12 +1,14 @@
 from .. import events
-from ..models import GameState 
+from ..models import *
 from ..serializers import GameStateSerializer
 
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
+from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadRequest, JsonResponse
 from django.core import serializers
 
 import json
+
+"""TODO: Refactor this file into controller directory"""
 
 
 # Game views
@@ -53,7 +55,58 @@ def game(request, game_id=None):
 		return JsonResponse(serializer.data)
 
 	return None
-	
+
+
+def create_quiz_from_file(request):
+	path = "quizzes/sample_quiz.json"
+	with open(path) as f:
+		data = json.load(f)
+
+	rounds = []
+	quiz = Quiz(name=data["name"])
+	quiz.save()
+	for r_i, r in enumerate(data["rounds"]):
+		round = Round(name=r["name"])
+		ord_round = OrderedRound(quiz=quiz, round=round, order=r_i)
+
+		round.save()
+		ord_round.save()
+
+		for q_i, q in enumerate(r["questions"]):
+			prompt = q["prompt"]
+
+			if q["type"] == "mcq":
+				question = MultiChoiceQuestion(prompt=prompt, round=round)
+				question.save()
+
+				ans = q["answer"]
+				exists_correct = False
+				for c in q["choices"]:
+					is_correct = c == ans
+					exists_correct |= is_correct
+					choice = Choice(text=c, question=question, is_correct=is_correct)
+					choice.save()
+				if not exists_correct:
+					print(f"[R{r_i}|Q{q_i}] MCQ answer \"{ans}\" not included in choices: {','.join(q['choices'])}")
+					return HttpResponseBadRequest()
+			else:
+				print(f"[R{r_i}|Q{q_i}] got bad question type: {q['type']}")
+				return HttpResponseBadRequest()
+
+			ord_question = OrderedQuestion(round=round, question=question, order=q_i)
+			ord_question.save()
+			question.save()
+			round.questions.add(question)
+
+		round.save()
+		ord_round.save()
+
+		quiz.rounds.add(round)
+
+	quiz.save()
+
+	return HttpResponse()
+
 
 def game_action(request, game_id: int, action: str):
 	game = GameState.objects.all().get(pk=game_id)
