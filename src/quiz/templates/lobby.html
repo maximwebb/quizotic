@@ -12,17 +12,32 @@
 const sse = new EventSource("/events/");
 
 sse.addEventListener("update", async (e) => {
-	console.log("Refreshing team list");
+	let ev = JSON.parse(e.data);
+	if (ev.type == "teams_update") {
+		console.log(`Refreshing teams list`);
+		await refreshTeamsList();
+	}
+	else if (ev.type == "room_update") {
+		console.log(`Changing rooms`);
+		changeRoom();
+	}
+	else {
+		console.log(`Got unrecognised event type: ${ev.type}`);
+	}
+});
+
+const refreshTeamsList = async () => {
 	const res = await fetch("/teams/list");
 	const html = await res.text();
 
 	document.querySelector("#team-list").innerHTML = html;
-});
+};
 
-sse.addEventListener("stateChange", async (e) => {
-	console.log("Starting game");
+const changeRoom = () => {
 	window.location.replace("/quiz");
-});
+}
+
+
 </script>
 </html>
 

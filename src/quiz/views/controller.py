@@ -1,4 +1,4 @@
-from ..events import EVENT_QUEUE
+from .. import events
 from ..models import GameState 
 from ..serializers import GameStateSerializer
 
@@ -71,7 +71,7 @@ def game_action(request, game_id: int, action: str):
 
 	return HttpResponseNotFound()
 
-def game_room(request, game_id: int, room: str):
+def game_room(request, game_id: int, room: str=None):
 	game = GameState.objects.all().get(pk=game_id)
 	print(room)
 	if request.method == "POST":
@@ -87,6 +87,8 @@ def game_room(request, game_id: int, room: str):
 			return HttpResponseNotFound()
 		game.save()
 		serializer = GameStateSerializer(game)
+		events.push_room_update()
 		return JsonResponse(serializer.data)
+		
 	
 	return HttpResponseNotFound()

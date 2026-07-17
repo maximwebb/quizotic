@@ -5,6 +5,7 @@ from django.urls import reverse
 from .lobby import lobby_view
 from ..forms import CreateTeamForm
 from ..models import Team
+from .. import events
 
 def create(request):
 	if request.method == "POST":
@@ -16,6 +17,8 @@ def create(request):
 
 		team = Team(team_name=team_name, team_leader=team_leader)
 		team.save()
+
+		events.push_teams_update()
 
 		return HttpResponseRedirect(reverse("lobby"))
 
