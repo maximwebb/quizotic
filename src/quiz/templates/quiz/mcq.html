@@ -1,6 +1,16 @@
-<h2>{{ question.prompt }}</h2>
-<ul>
-{% for choice in choices %}
-	<li>{{ choice.text }}</li>
-{% endfor %}
-</ul>
+<!doctype html>
+<html>
+<head>
+    {% load static %}
+    <script src="{% static 'js/sse.js' %}"> </script>
+</head>
+
+<body>
+    <h2>{{ question.prompt }}</h2>
+    <ul>
+    {% for choice in choices %}
+    	<li>{{ choice.text }}</li>
+    {% endfor %}
+    </ul>
+</body>
+</html>

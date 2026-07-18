@@ -1,12 +1,11 @@
-from .views import lobby, teams, index, quiz, controller, question
 from .events import sse
+from .views import controller, index, teams, question, quiz
 
 from django.urls import path, include
 from rest_framework import routers, serializers, viewsets
 
 urlpatterns = [
     path("", index.home_view, name="index"),
-    path("lobby", lobby.lobby_view, name="lobby"),
     path("teams/create", teams.create, name="create_team"),
     path("teams/list", teams.list, name="team_list"),
     path("quiz", quiz.quiz_view, name="quiz"),

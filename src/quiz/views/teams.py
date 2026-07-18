@@ -21,7 +21,7 @@ def create(request):
 
         events.push_teams_update()
 
-        return HttpResponseRedirect(reverse("lobby"))
+        return HttpResponseRedirect(reverse("quiz"))
 
     form = CreateTeamForm()
     context = {"form": form}
