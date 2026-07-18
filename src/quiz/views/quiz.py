@@ -7,6 +7,5 @@ import os
 
 
 def quiz_view(request):
-	context = {}
-	return question.mcq_view(request)
-
+    context = {}
+    return question.mcq_view(request)

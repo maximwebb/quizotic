@@ -4,6 +4,7 @@ from collections import deque
 
 EVENT_QUEUE = deque()
 
+
 def event_stream():
 	i = 0
 	while True:
@@ -11,6 +12,7 @@ def event_stream():
 		if EVENT_QUEUE:
 			yield EVENT_QUEUE.pop()
 		time.sleep(5)
+
 
 def push_teams_update():
 	payload = f'event: update\ndata: {{"type": "teams_update"}}\n\n'
