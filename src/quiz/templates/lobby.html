@@ -1,4 +1,10 @@
+<!doctype html>
 <html>
+<head>
+    {% load static %}
+    <script src="{% static 'js/sse.js' %}"> </script>
+</head>
+
 <body>
 	<h1>Welcome team {{ cur_team.team_name }} </h1>
 	<h2>Your team leader is {{ cur_team.team_leader }} </h2>
@@ -9,17 +15,11 @@
 </body>
 
 <script>
-const sse = new EventSource("/events/");
-
 sse.addEventListener("update", async (e) => {
 	let ev = JSON.parse(e.data);
-	if (ev.type == "teams_update") {
+	if (ev.type == "teams") {
 		console.log(`Refreshing teams list`);
 		await refreshTeamsList();
-	}
-	else if (ev.type == "room_update") {
-		console.log(`Changing rooms`);
-		changeRoom();
 	}
 	else {
 		console.log(`Got unrecognised event type: ${ev.type}`);
@@ -32,10 +32,6 @@ const refreshTeamsList = async () => {
 
 	document.querySelector("#team-list").innerHTML = html;
 };
-
-const changeRoom = () => {
-	window.location.reload(true);
-}
 
 
 </script>

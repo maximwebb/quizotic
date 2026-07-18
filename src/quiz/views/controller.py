@@ -118,6 +118,8 @@ def game_action(request, game_id: int, action: str):
         else:
             return HttpResponseNotFound()
 
+        events.push_question_change()
+
         game.save()
         serializer = GameStateSerializer(game)
         return JsonResponse(serializer.data)
@@ -127,8 +129,9 @@ def game_action(request, game_id: int, action: str):
 
 def game_room(request, game_id: int, room: str = None):
     game = GameState.objects.all().get(pk=game_id)
-    print(room)
+    prev_room = GameState.Room(game.room)
     if request.method == "POST":
+        print(f"Changing {prev_room.label.lower()} --> {room}")
         if room == "lobby":
             game.room = GameState.Room.LOBBY
         elif room == "quiz":
@@ -141,7 +144,7 @@ def game_room(request, game_id: int, room: str = None):
             return HttpResponseNotFound()
         game.save()
         serializer = GameStateSerializer(game)
-        events.push_room_update()
+        events.push_room_change()
         return JsonResponse(serializer.data)
 
     return HttpResponseNotFound()

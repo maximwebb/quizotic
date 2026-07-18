@@ -1,31 +1,17 @@
-import time
 from django.http import StreamingHttpResponse
-from collections import deque
+from django_eventstream import send_event
 
-EVENT_QUEUE = deque()
-
-
-def event_stream():
-    i = 0
-    while True:
-        push_teams_update()
-        if EVENT_QUEUE:
-            yield EVENT_QUEUE.pop()
-        time.sleep(2)
+from queue import Queue, Empty
+import time
 
 
 def push_teams_update():
-    payload = f'event: update\ndata: {{"type": "teams_update"}}\n\n'
-    EVENT_QUEUE.appendleft(payload)
+    send_event("events", "update", {"type": "teams"})
 
 
-def push_room_update():
-    payload = f'event: update\ndata: {{"type": "room_update"}}\n\n'
-    EVENT_QUEUE.appendleft(payload)
+def push_room_change():
+    send_event("events", "refresh", {"type": "room_change"})
 
 
-def sse(request):
-    return StreamingHttpResponse(
-        event_stream(),
-        content_type="text/event-stream"
-    )
+def push_question_change():
+    send_event("events", "refresh", {"type": "question_change"})

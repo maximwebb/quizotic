@@ -1,7 +1,7 @@
-from .events import sse
 from .views import controller, index, teams, question, quiz
 
 from django.urls import path, include
+import django_eventstream
 from rest_framework import routers, serializers, viewsets
 
 urlpatterns = [
@@ -17,5 +17,5 @@ urlpatterns = [
     path("game/<int:game_id>", controller.game, name="game"),
     path("game", controller.game, name="game_list"),
     path("create-quiz", controller.create_quiz_from_file, name="create_quiz"),
-    path("events/", sse),
+    path("events/", include(django_eventstream.urls), {"channels": ["events"]}),
 ]

@@ -47,7 +47,7 @@ class MultiChoiceQuestion(Question):
 class Round(models.Model):
     name = models.CharField(max_length=128, blank=True)
     questions = models.ManyToManyField(
-            Question, through=OrderedQuestion, related_name="+")
+        Question, through=OrderedQuestion, related_name="+")
 
     def __str__(self):
         return self.name
