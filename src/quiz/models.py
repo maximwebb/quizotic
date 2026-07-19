@@ -100,10 +100,10 @@ class Submission(models.Model):
 
     @property
     def round_num(self):
-        return QuizRound.objects.get(round=self.question.round, quiz=self.game.quiz)
+        return QuizRound.objects.get(round=self.question.round, quiz=self.game.quiz).order
 
     def __str__(self):
-        return f"{self.team.team_name}|Q{self.question_num}"
+        return f"{self.team.team_name}|R{self.round_num}|Q{self.question_num}|{self.status}"
 
 
 class GameState(models.Model):
@@ -123,6 +123,14 @@ class GameState(models.Model):
     @property
     def cur_round(self):
         return QuizRound.objects.get(quiz=self.quiz, order=self.round_num).round
+
+    @property
+    def cur_round_question(self):
+        return RoundQuestion.objects.get(round=self.cur_round, order=self.question_num)
+
+    @property
+    def cur_question(self):
+        return self.cur_round_question.question
 
     def __str__(self):
         return f"Room: {self.room} Round: {self.round_num} Question: {self.question_num}"
