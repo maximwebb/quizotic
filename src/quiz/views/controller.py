@@ -38,7 +38,9 @@ def game_state_view(request, game_id):
 def game(request, game_id=None):
     if game_id is None:
         if request.method == "POST":
-            game = GameState()
+            # TODO: Select quiz
+            quiz = Quiz.objects.all()[0]
+            game = GameState(quiz=quiz)
             game.save()
             serializer = GameStateSerializer(game)
             return JsonResponse(serializer.data)
@@ -109,12 +111,28 @@ def create_quiz_from_file(request):
 
 
 def game_action(request, game_id: int, action: str):
-    game = GameState.objects.all().get(pk=game_id)
+    game = GameState.objects.get(pk=game_id)
     if request.method == "POST":
         if action == "next-question":
-            game.question += 1
+            if game.question_num >= len(game.cur_round) - 1:
+                if game.round_num < len(game.quiz) - 1:
+                    game.question_num = 0
+                    game.round_num += 1
+                    print("Changing to round {game.round_num}")
+                else:
+                    print("Reached end of quiz")
+            else:
+                game.question_num += 1
         elif action == "prev-question":
-            game.question -= 1
+            if game.question_num == 0:
+                if game.round_num > 0:
+                    game.round_num -= 1
+                    game.question_num = len(game.cur_round) - 1
+                    print("Changing to round {game.round_num}")
+                else:
+                    print("Reached start of quiz")
+            else:
+                game.question_num -= 1
         else:
             return HttpResponseNotFound()
 

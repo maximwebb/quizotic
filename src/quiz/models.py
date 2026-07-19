@@ -49,6 +49,9 @@ class Round(models.Model):
     questions = models.ManyToManyField(
         Question, through=RoundQuestion, related_name="+")
 
+    def __len__(self):
+        return self.questions.count()
+
     def __str__(self):
         return self.name
 
@@ -71,6 +74,9 @@ class Quiz(models.Model):
     name = models.CharField(max_length=128, blank=True)
     rounds = models.ManyToManyField(Round, through=QuizRound, related_name="+")
 
+    def __len__(self):
+        return self.rounds.count()
+
     def __str__(self):
         return self.name
 
@@ -92,9 +98,9 @@ class Submission(models.Model):
     def question_num(self):
         return self.question.order
 
-    # @property
-    # def round_num(self):
-    #     QuizRound.objects.get(round=self.question.round)
+    @property
+    def round_num(self):
+        return QuizRound.objects.get(round=self.question.round, quiz=self.game.quiz)
 
     def __str__(self):
         return f"{self.team.team_name}|Q{self.question_num}"
@@ -112,6 +118,11 @@ class GameState(models.Model):
         GAME_END = 4, "Game End"
 
     room = models.IntegerField(choices=Room, default=Room.LOBBY)
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
+
+    @property
+    def cur_round(self):
+        return QuizRound.objects.get(quiz=self.quiz, order=self.round_num).round
 
     def __str__(self):
-        return f"Room: {self.room} Round: {self.round} Question: {self.question}"
+        return f"Room: {self.room} Round: {self.round_num} Question: {self.question_num}"
