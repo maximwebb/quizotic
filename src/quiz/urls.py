@@ -17,5 +17,6 @@ urlpatterns = [
     path("game/<int:game_id>", controller.game, name="game"),
     path("game", controller.game, name="game_list"),
     path("create-quiz", controller.create_quiz_from_file, name="create_quiz"),
+    path("canvas", index.canvas_view, name="canvas"),
     path("events/", include(django_eventstream.urls), {"channels": ["events"]}),
 ]

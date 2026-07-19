@@ -1,0 +1,89 @@
+<!doctype html>
+<html>
+<head>
+
+</head>
+<body>
+    <button onclick="clearCanvas()">Clear</button>
+    <h1>Skribbl.io</h1>
+    <canvas id="cv" width="900" height="600" style="border: 2px solid black"></canvas>
+    <div>
+        <h3>Line width</h3>
+        <select id="lineWidth">
+            <option value="1">Small</option>
+            <option value="2">Medium</option>
+            <option value="4">Large</option>
+            <option value="8">XL</option>
+        </select>
+    </div>
+
+    <div>
+        <h3>Color</h3>
+        <select id="lineColor">
+            <option value="black" color="black">Black</option>
+            <option value="red" style="color:red">Red</option>
+            <option value="blue" color="blue">Blue</option>
+            <option value="yellow" color="yellow">Yellow</option>
+            <option value="white" color="black">White</option>
+        </select>
+    </div>
+</body>
+<script>
+const canvas = document.querySelector("#cv");
+const ctx = canvas.getContext("2d");
+
+const widthSelect = document.querySelector("#lineWidth");
+const colorSelect = document.querySelector("#lineColor");
+
+let [prevX, prevY] = [null, null];
+
+const getXY = (e) => {
+    const rect = canvas.getBoundingClientRect();
+    return [e.clientX - rect.left, e.clientY - rect.top];
+}
+
+const draw = (e) => {
+    const [x, y] = getXY(e);
+
+    if (prevX === null || prevY === null) {
+        [prevX, prevY] = [x, y];
+    }
+
+    ctx.beginPath();
+    ctx.moveTo(prevX, prevY);
+    ctx.lineTo(x, y);
+
+    ctx.stroke();
+    [prevX, prevY] = [x, y];
+}
+
+const updateStroke = () => {
+    let width = widthSelect.selectedOptions[0].value;
+    let color = colorSelect.selectedOptions[0].value;
+    ctx.lineWidth = width;
+    ctx.strokeStyle = color;
+}
+
+const clearCanvas = () => {
+    console.log("Clearing");
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+const onFinish = (e) => {
+    [prevX, prevY] = [null, null];
+    canvas.removeEventListener("mousemove", draw);
+    canvas.removeEventListener("mouseup", onFinish);
+}
+
+
+canvas.addEventListener("mousedown", (e) => {
+    canvas.addEventListener("mousemove", draw);
+    canvas.addEventListener("mouseup", onFinish);
+});
+
+widthSelect.addEventListener("change", updateStroke);
+colorSelect.addEventListener("change", updateStroke);
+
+
+</script>
+</html>

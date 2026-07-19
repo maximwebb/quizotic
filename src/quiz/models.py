@@ -108,8 +108,8 @@ class Submission(models.Model):
 
 class GameState(models.Model):
     created = models.DateTimeField(default=datetime.now, blank=True)
-    round_num = models.IntegerField(default=1)
-    question_num = models.IntegerField(default=1)
+    round_num = models.IntegerField(default=0)
+    question_num = models.IntegerField(default=0)
 
     class Room(models.IntegerChoices):
         LOBBY = 1, "Lobby"
@@ -134,3 +134,11 @@ class GameState(models.Model):
 
     def __str__(self):
         return f"Room: {self.room} Round: {self.round_num} Question: {self.question_num}"
+
+
+class Image(models.Model):
+    path = models.CharField(max_length=256)
+    alt = models.CharField(max_length=64)
+
+    def __str__(self):
+        return self.alt
