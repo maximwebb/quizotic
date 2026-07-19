@@ -19,7 +19,7 @@ class Question(models.Model):
 
 
 # Question with additional ordering info specific to the round
-class OrderedQuestion(models.Model):
+class RoundQuestion(models.Model):
     round = models.ForeignKey("Round", on_delete=models.CASCADE)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     order = models.PositiveIntegerField()
@@ -34,26 +34,26 @@ class OrderedQuestion(models.Model):
 class Choice(models.Model):
     text = models.CharField(max_length=128, blank=True)
     question = models.ForeignKey("MultiChoiceQuestion", on_delete=models.CASCADE)
-    is_correct = models.BooleanField(db_default=False)
+    is_correct = models.BooleanField(default=False)
 
     def __str__(self):
         return self.text
 
 
 class MultiChoiceQuestion(Question):
-    round = models.ForeignKey("Round", on_delete=models.CASCADE)
+    pass
 
 
 class Round(models.Model):
     name = models.CharField(max_length=128, blank=True)
     questions = models.ManyToManyField(
-        Question, through=OrderedQuestion, related_name="+")
+        Question, through=RoundQuestion, related_name="+")
 
     def __str__(self):
         return self.name
 
 
-class OrderedRound(models.Model):
+class QuizRound(models.Model):
     quiz = models.ForeignKey("Quiz", on_delete=models.CASCADE)
     round = models.ForeignKey(Round, on_delete=models.CASCADE)
     order = models.PositiveIntegerField()
@@ -69,16 +69,41 @@ class OrderedRound(models.Model):
 
 class Quiz(models.Model):
     name = models.CharField(max_length=128, blank=True)
-    rounds = models.ManyToManyField(Round, through=OrderedRound, related_name="+")
+    rounds = models.ManyToManyField(Round, through=QuizRound, related_name="+")
 
     def __str__(self):
         return self.name
 
 
+class Submission(models.Model):
+    question = models.ForeignKey(RoundQuestion, on_delete=models.CASCADE)
+    game = models.ForeignKey("GameState", on_delete=models.CASCADE)
+    team = models.ForeignKey(Team, on_delete=models.CASCADE)
+
+    class Status(models.IntegerChoices):
+        PENDING = 1, "pending"
+        CORRECT = 2, "correct"
+        INCORRECT = 3, "incorrect"
+
+    status = models.IntegerField(choices=Status, default=Status.PENDING)
+    points = models.IntegerField(default=0)
+
+    @property
+    def question_num(self):
+        return self.question.order
+
+    # @property
+    # def round_num(self):
+    #     QuizRound.objects.get(round=self.question.round)
+
+    def __str__(self):
+        return f"{self.team.team_name}|Q{self.question_num}"
+
+
 class GameState(models.Model):
     created = models.DateTimeField(default=datetime.now, blank=True)
-    round = models.IntegerField(db_default=1)
-    question = models.IntegerField(db_default=1)
+    round_num = models.IntegerField(default=1)
+    question_num = models.IntegerField(default=1)
 
     class Room(models.IntegerChoices):
         LOBBY = 1, "Lobby"
@@ -86,7 +111,7 @@ class GameState(models.Model):
         ROUND_END = 3, "Round End"
         GAME_END = 4, "Game End"
 
-    room = models.IntegerField(choices=Room, db_default=Room.LOBBY)
+    room = models.IntegerField(choices=Room, default=Room.LOBBY)
 
     def __str__(self):
         return f"Room: {self.room} Round: {self.round} Question: {self.question}"

@@ -1,4 +1,4 @@
-from . import question, lobby
+from . import lobby, question
 from .common import get_cur_game_state
 from ..models import GameState
 
@@ -17,8 +17,6 @@ def quiz_view(request):
         case GameState.Room.LOBBY:
             return lobby.lobby_view(request)
         case GameState.Room.QUIZ:
-            return question.mcq_view(request)
+            return question.question_view(request)
         case _:
             return HttpResponseNotFound()
-
-    return question.mcq_view(request)

@@ -67,7 +67,7 @@ def create_quiz_from_file(request):
     quiz.save()
     for r_i, r in enumerate(data["rounds"]):
         round = Round(name=r["name"])
-        ord_round = OrderedRound(quiz=quiz, round=round, order=r_i)
+        ord_round = QuizRound(quiz=quiz, round=round, order=r_i)
 
         round.save()
         ord_round.save()
@@ -76,7 +76,7 @@ def create_quiz_from_file(request):
             prompt = q["prompt"]
 
             if q["type"] == "mcq":
-                question = MultiChoiceQuestion(prompt=prompt, round=round)
+                question = MultiChoiceQuestion(prompt=prompt)
                 question.save()
 
                 ans = q["answer"]
@@ -93,7 +93,7 @@ def create_quiz_from_file(request):
                 print(f"[R{r_i}|Q{q_i}] got bad question type: {q['type']}")
                 return HttpResponseBadRequest()
 
-            ord_question = OrderedQuestion(round=round, question=question, order=q_i)
+            ord_question = RoundQuestion(round=round, question=question, order=q_i)
             ord_question.save()
             question.save()
             round.questions.add(question)
