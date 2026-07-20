@@ -5,6 +5,7 @@ from datetime import datetime
 class Team(models.Model):
     team_name = models.CharField(max_length=128, blank=True)
     team_leader = models.CharField(max_length=128, blank=True)
+    # game = models.ForeignKey("GameState")
 
     def __str__(self):
         return f"{self.team_name}|{self.team_leader}"
@@ -119,6 +120,7 @@ class GameState(models.Model):
 
     room = models.IntegerField(choices=Room, default=Room.LOBBY)
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
+    code = models.CharField(max_length=8)
 
     @property
     def cur_round(self):

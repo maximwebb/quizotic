@@ -1,10 +1,10 @@
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest, HttpResponseNotFound
 from django.urls import reverse
 
 from .lobby import lobby_view
 from ..forms import CreateTeamForm
-from ..models import Team
+from ..models import Team, GameState
 from .. import events
 
 
@@ -22,6 +22,11 @@ def create(request):
         events.push_teams_update()
 
         return HttpResponseRedirect(reverse("quiz"))
+
+    if "code" not in request.GET:
+        return HttpResponseBadRequest()
+    elif not GameState.objects.filter(code=request.GET["code"]).exists():
+        return HttpResponseNotFound()
 
     form = CreateTeamForm()
     context = {"form": form}

@@ -1,20 +1,10 @@
+<!doctype html>
 <head>
 <body>
-<h1>welcome to quiz</h1>
-<a href="{% url 'create_team' %}">create team</a>
+    <h1>welcome to quiz</h1>
+    <form action="teams/create" method="get">
+        {{ form }}
+        <input type="submit" value="Join"></input>
+    </form>
 </body>
-
-<script>
-const source = new EventSource("/events/");
-
-console.log("Initialised script");
-source.addEventListener("update", (ev) => {
-	console.log(ev.data);
-});
-
-source.onopen = () => { console.log("Connected!"); }
-
-source.onerror = (ev) => { console.log("Error!"); }
-
-</script>
 </head>

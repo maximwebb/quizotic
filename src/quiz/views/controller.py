@@ -7,6 +7,8 @@ from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadReque
 from django.core import serializers
 
 import json
+import random
+import string
 
 """TODO: Refactor this file into controller directory"""
 
@@ -40,7 +42,8 @@ def game(request, game_id=None):
         if request.method == "POST":
             # TODO: Select quiz
             quiz = Quiz.objects.all()[0]
-            game = GameState(quiz=quiz)
+            code = ''.join(random.choices(string.ascii_uppercase, k=8))
+            game = GameState(quiz=quiz, code=code)
             game.save()
             serializer = GameStateSerializer(game)
             return JsonResponse(serializer.data)
