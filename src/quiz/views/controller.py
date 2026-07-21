@@ -1,6 +1,7 @@
 from .. import events
 from ..models import *
 from ..serializers import GameStateSerializer
+from ..views.common import get_game_by_code
 
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadRequest, JsonResponse
@@ -24,26 +25,26 @@ def game_select_view(request):
     return render(request, "controller/index.html", context)
 
 
-def game_view(request, game_id):
+def game_view(request, game_code: str):
     if request.method == "GET":
-        game = GameState.objects.values().get(pk=game_id)
+        game = get_game_by_code(game_code)
         context = {"game": game}
         return render(request, "controller/game.html", context)
 
 
-def game_state_view(request, game_id):
+def game_state_view(request, game_code: str):
     if request.method == "GET":
-        game = GameState.objects.get(pk=game_id)
+        game = get_game_by_code(game_code)
         context = {"game": game}
         return render(request, "controller/game_state.html", context)
 
 
-def game(request, game_id=None):
-    if game_id is None:
+def game(request, game_code=None):
+    if game_code is None:
         if request.method == "POST":
             # TODO: Select quiz
             quiz = Quiz.objects.all()[0]
-            code = ''.join(random.choices(string.ascii_uppercase, k=8))
+            game_code = ''.join(random.choices(string.ascii_uppercase, k=8))
             game = GameState(quiz=quiz, code=code)
             game.save()
             serializer = GameStateSerializer(game)
@@ -56,7 +57,7 @@ def game(request, game_id=None):
             return None
 
     if request.method == "GET":
-        game = GameState.objects.values().get(pk=game_id)
+        game = get_game_by_code(game_code)
         serializer = GameStateSerializer(game)
         return JsonResponse(serializer.data)
 
@@ -114,8 +115,8 @@ def create_quiz_from_file(request):
     return HttpResponse()
 
 
-def game_action(request, game_id: int, action: str):
-    game = GameState.objects.get(pk=game_id)
+def game_action(request, game_code: str, action: str):
+    game = get_game_by_code(game_code)
     if request.method == "POST":
         if action == "next-question":
             if game.question_num >= len(game.cur_round) - 1:
@@ -149,8 +150,8 @@ def game_action(request, game_id: int, action: str):
     return HttpResponseNotFound()
 
 
-def game_room(request, game_id: int, room: str = None):
-    game = GameState.objects.all().get(pk=game_id)
+def game_room(request, game_code: str, room: str = None):
+    game = get_game_by_code(game_code)
     prev_room = GameState.Room(game.room)
     if request.method == "POST":
         print(f"Changing {prev_room.label.lower()} --> {room}")

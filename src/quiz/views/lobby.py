@@ -3,16 +3,15 @@ from django.http import HttpResponse
 from ..models import Team
 
 
-def lobby_view(request):
+def lobby_view(request, game_code: str):
     team_dict = {}
 
     teams = Team.objects.all()
     team_name = request.session["team_name"]
-    cur_team = [t for t in teams if t.team_name == team_name][0]
+    cur_team = Team.objects.get(team_name=team_name)
 
     context = {}
-    context["teams"] = teams
+    context["game_code"] = game_code
     context["cur_team"] = cur_team
-    print(f"lobby ctx: {context}")
 
     return render(request, "lobby.html", context)

@@ -22,12 +22,13 @@ const fetch_with_csrf = async (endpoint, fields) => {
 	return await fetch(endpoint, fields);
 }
 
+// TODO: Make this a form to create new game
 const newGame = async () => {
 	const resp = await fetch_with_csrf("/game", {
 		method: "POST",
 	});
 	const game = await resp.json();
-	window.location.href += `/${game.id}`;
+	window.location.href += `/${game.code}`;
 }
 
 const listGames = async () => {

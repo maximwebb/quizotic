@@ -135,7 +135,7 @@ class GameState(models.Model):
         return self.cur_round_question.question
 
     def __str__(self):
-        return f"Room: {self.room} Round: {self.round_num} Question: {self.question_num}"
+        return f"Room: {self.room} Round: {self.round_num} Question: {self.question_num} Code: {self.code}"
 
 
 class Image(models.Model):

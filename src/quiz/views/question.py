@@ -1,4 +1,4 @@
-from .common import get_cur_game_state, get_cur_team
+from .common import get_game_by_code, get_cur_team
 from ..models import GameState, Round, QuizRound, RoundQuestion, MultiChoiceQuestion, Choice, Submission
 from ..forms import MCQForm, CreateTeamForm
 
@@ -10,18 +10,18 @@ def is_submitted(team, question):
     return Submission.objects.filter(team=team, question=question).exists()
 
 
-def question_view(request):
-    gs = get_cur_game_state(request)
+def question_view(request, game_code: str):
+    gs = get_game_by_code(game_code)
     team = get_cur_team(request)
 
     if is_submitted(team, gs.cur_round_question):
-        return submitted_view(request)
+        return submitted_view(request, game_code)
 
-    return mcq_view(request)
+    return mcq_view(request, game_code)
 
 
-def mcq_view(request):
-    gs = get_cur_game_state(request)
+def mcq_view(request, game_code: str):
+    gs = get_game_by_code(game_code)
     team = get_cur_team(request)
 
     if request.method == "POST":
@@ -45,5 +45,5 @@ def mcq_view(request):
         return HttpResponseNotFound()
 
 
-def submitted_view(request):
+def submitted_view(request, game_code: str):
     return render(request, "quiz/submitted.html")

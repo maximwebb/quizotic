@@ -1,5 +1,5 @@
 from . import lobby, question
-from .common import get_cur_game_state
+from .common import get_game_by_code
 from ..models import GameState
 
 from django.shortcuts import render
@@ -9,14 +9,17 @@ import json
 import os
 
 
-def quiz_view(request, game_code: int):
-    gs = get_cur_game_state(request)
+def quiz_view(request, game_code: str):
+    gs = get_game_by_code(game_code)
     context = {}
 
+    print(f"quizview: {gs}")
     match gs.room:
         case GameState.Room.LOBBY:
-            return lobby.lobby_view(request)
+            print("Going lobby")
+            return lobby.lobby_view(request, game_code)
         case GameState.Room.QUIZ:
-            return question.question_view(request)
+            print("Going quiz")
+            return question.question_view(request, game_code)
         case _:
             return HttpResponseNotFound()

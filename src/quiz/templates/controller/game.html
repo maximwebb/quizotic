@@ -1,3 +1,4 @@
+<!doctype html>
 <html>
 <body>
     <h1>Game Control Panel {{ game.code }}</h1>
@@ -34,15 +35,14 @@ const fetch_with_csrf = async (endpoint, fields={}) => {
 }
 
 const refreshGameState = async () => {
-	const resp = await fetch_with_csrf("{% url 'controller_game_state' game.id %}").then(r => r.text());
+	const resp = await fetch_with_csrf("{% url 'controller_game_state' game.code %}").then(r => r.text());
 	
 	document.querySelector("#game-state").innerHTML = resp;
 }
 
 const refreshTeamList = async () => {
-	const res = await fetch("/teams/list");
+    const res = await fetch("/teams/list/{{game.code}}");
 	const html = await res.text();
-
 	document.querySelector("#team-list").innerHTML = html;
 };
 
@@ -52,8 +52,7 @@ refreshTeamList();
 refreshGameState();
 
 const nextQuestion = async () => {
-	// const resp = await fetch_with_csrf("/game/{{game.id}}/next-question", {
-	const resp = await fetch_with_csrf("{% url 'game_action' game.id 'next-question' %}", {
+	const resp = await fetch_with_csrf("{% url 'game_action' game.code 'next-question' %}", {
 		method: "POST",
 	});
 
@@ -61,7 +60,7 @@ const nextQuestion = async () => {
 }
 
 const prevQuestion = async () => {
-	const resp = await fetch_with_csrf("{% url 'game_action' game.id 'prev-question' %}", {
+	const resp = await fetch_with_csrf("{% url 'game_action' game.code 'prev-question' %}", {
 		method: "POST",
 	});
 
@@ -69,12 +68,9 @@ const prevQuestion = async () => {
 }
 
 const setRoom = async (room) => {
-	// TODO: Lookup how to substitute javascript variable into django template
-	const resp = await fetch_with_csrf("/game/{{game.id}}/room/" + room, {
+	const resp = await fetch_with_csrf("/game/{{game.code}}/room/" + room, {
 		method: "POST",
 	});
-
-	console.log(resp);
 
 	refreshGameState();
 }

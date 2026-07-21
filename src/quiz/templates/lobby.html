@@ -18,7 +18,6 @@
 sse.addEventListener("update", async (e) => {
 	let ev = JSON.parse(e.data);
 	if (ev.type == "teams") {
-		console.log(`Refreshing teams list`);
 		await refreshTeamsList();
 	}
 	else {
@@ -26,13 +25,15 @@ sse.addEventListener("update", async (e) => {
 	}
 });
 
+
 const refreshTeamsList = async () => {
-	const res = await fetch("/teams/list");
+    const res = await fetch("/teams/list/{{game_code}}");
 	const html = await res.text();
 
 	document.querySelector("#team-list").innerHTML = html;
 };
 
+refreshTeamsList();
 
 </script>
 </html>

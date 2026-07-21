@@ -1,10 +1,6 @@
 from ..models import GameState, Team
 
 
-def get_cur_game_state(request):
-    return GameState.objects.all().order_by("-created")[0]
-
-
 def get_game_by_code(code):
     return GameState.objects.filter(code=code)[0]
 
