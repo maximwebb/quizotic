@@ -2,7 +2,8 @@
 <head>
 <body>
     <h1>welcome to quiz</h1>
-    <form action="teams/create" method="get">
+    <form action="" method="post">
+        {% csrf_token %}
         {{ form }}
         <input type="submit" value="Join"></input>
     </form>

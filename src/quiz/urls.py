@@ -6,9 +6,9 @@ from rest_framework import routers, serializers, viewsets
 
 urlpatterns = [
     path("", index.home_view, name="index"),
-    path("teams/create", teams.create, name="create_team"),
+    path("teams/create/<str:game_code>", teams.create, name="create_team"),
     path("teams/list", teams.list, name="team_list"),
-    path("quiz", quiz.quiz_view, name="quiz"),
+    path("quiz/<str:game_code>", quiz.quiz_view, name="quiz"),
     path("controller/<int:game_id>", controller.game_view, name="controller_game"),
     path("controller/<int:game_id>/state", controller.game_state_view, name="controller_game_state"),
     path("controller", controller.game_select_view, name="controller_select"),

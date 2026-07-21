@@ -9,7 +9,7 @@ import json
 import os
 
 
-def quiz_view(request):
+def quiz_view(request, game_code: int):
     gs = get_cur_game_state(request)
     context = {}
 

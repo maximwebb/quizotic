@@ -18,6 +18,7 @@ import string
 def game_select_view(request):
     context = {}
     games = GameState.objects.all().order_by("-created")
+    print(games)
 
     context["games"] = games
     return render(request, "controller/index.html", context)
