@@ -37,3 +37,9 @@ def list(request, game_code: str):
     game = get_game_by_code(game_code)
     teams = Team.objects.filter(game=game)
     return render(request, "teams/list.html", {"teams": teams})
+
+
+def profile(request, game_code: str):
+    game = get_game_by_code(game_code)
+    context = {"game": game}
+    return render(request, "teams/profile.html", context)

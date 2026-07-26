@@ -12,6 +12,7 @@
 	<div id="team-list">
 		{% include "teams/list.html" %}
 	</div>
+    <a href="{% url 'team_profile' game.code %}">Edit profile</a>
 </body>
 
 <script>

@@ -8,6 +8,7 @@ urlpatterns = [
     path("", index.home_view, name="index"),
     path("teams/create/<str:game_code>", teams.create, name="create_team"),
     path("teams/list/<str:game_code>", teams.list, name="team_list"),
+    path("teams/profile/<str:game_code>", teams.profile, name="team_profile"),
     path("quiz/<str:game_code>", quiz.quiz_view, name="quiz"),
     path("controller/<str:game_code>", controller.game_view, name="controller_game"),
     path("controller/<str:game_code>/state", controller.game_state_view, name="controller_game_state"),

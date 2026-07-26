@@ -1,6 +1,8 @@
+from ..models import Team
+from .common import get_game_by_code
+
 from django.shortcuts import render
 from django.http import HttpResponse
-from ..models import Team
 
 
 def lobby_view(request, game_code: str):
@@ -13,5 +15,6 @@ def lobby_view(request, game_code: str):
     context = {}
     context["game_code"] = game_code
     context["cur_team"] = cur_team
+    context["game"] = get_game_by_code(game_code)
 
     return render(request, "lobby.html", context)
