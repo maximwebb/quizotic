@@ -43,8 +43,12 @@ def game(request, game_code=None):
     if game_code is None:
         if request.method == "POST":
             # TODO: Select quiz
-            quiz = Quiz.objects.all()[0]
-            game_code = ''.join(random.choices(string.ascii_uppercase, k=8))
+            if len(Quiz.objects.all()) == 0:
+                quiz = Quiz(name="Empty Quiz")
+                quiz.save()
+            else:
+                quiz = Quiz.objects.all()[0]
+            code = ''.join(random.choices(string.ascii_uppercase, k=8))
             game = GameState(quiz=quiz, code=code)
             game.save()
             serializer = GameStateSerializer(game)

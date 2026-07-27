@@ -3,5 +3,24 @@
 <body>
     <h1>Edit profile</h1>
     {% include "../include/canvas.html" %}
+	<form action="" method="post" id="profileForm" enctype="multipart/form-data">
+	{% csrf_token %}
+	{{ form }}
+	</form>
+	<button onclick="uploadImage()">Submit</button>
 </body>
+
+<script>
+// TODO: Move this to canvas JS file
+const uploadImage = () => {
+	const canvas = document.querySelector("canvas");
+	canvas.toBlob((blob) => {
+		const file = new File([blob], "profile.png");
+		const dt = new DataTransfer();
+		dt.items.add(file);
+		document.querySelector("#id_image").files = dt.files;
+		document.querySelector("#profileForm").submit();
+	});
+}
+</script>
 </html>

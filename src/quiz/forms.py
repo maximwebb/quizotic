@@ -15,6 +15,10 @@ class CreateTeamForm(forms.Form):
     team_leader = forms.CharField(label="Team Leader", max_length="128")
 
 
+class ProfilePicForm(forms.Form):
+    image = forms.FileField()
+
+
 class MCQForm(forms.Form):
     choices = forms.MultipleChoiceField(choices=[])
 
