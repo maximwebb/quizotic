@@ -1,11 +1,15 @@
+{% load static %}
 <!doctype html>
+<html>
 <head>
+    <link rel="stylesheet" href="{% static 'css/common.css' %}"></link>
+</head>
 <body>
     <h1>welcome to quiz</h1>
     <form action="" method="post">
         {% csrf_token %}
         {{ form }}
-        <input type="submit" value="Join"></input>
+        <input type="submit" value="Join" class="btn"></input>
     </form>
 </body>
-</head>
+</html>
