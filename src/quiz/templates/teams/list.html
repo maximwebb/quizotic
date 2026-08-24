@@ -1,5 +1,23 @@
-<ul>
+<style>
+.team-card-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.team-card {
+    padding: 20px;
+    border: 10px solid #FFD556;
+    margin: 10px;
+    font-size: 2em;
+}
+
+.team-card>img {
+    width: 80px;
+    height: 80px;
+}
+</style>
+<div class="team-card-list">
 {% for team in teams %}
-	<li>Team: {{team.team_name}} | {{team.team_leader}}</li>
+    {% include "teams/team_card.html" %}
 {% endfor %}
-</ul>
+</div>

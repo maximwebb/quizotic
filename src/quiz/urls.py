@@ -1,5 +1,7 @@
 from .views import controller, index, teams, question, quiz
 
+from django.conf import settings
+from django.conf.urls.static import static
 from django.urls import path, include
 import django_eventstream
 from rest_framework import routers, serializers, viewsets
@@ -20,4 +22,4 @@ urlpatterns = [
     path("create-quiz", controller.create_quiz_from_file, name="create_quiz"),
     path("canvas", index.canvas_view, name="canvas"),
     path("events/", include(django_eventstream.urls), {"channels": ["events"]}),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

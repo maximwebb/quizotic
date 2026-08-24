@@ -1,6 +1,8 @@
 from ..models import GameState, Team
 
-import tempfile
+from django.conf import settings
+
+import os
 
 
 def get_game_by_code(code):
@@ -13,8 +15,9 @@ def get_cur_team(request):
 
 
 class FileStore:
-	def store(file, team_name) -> str:
-		with tempfile.NamedTemporaryFile(delete=False) as f:
-			f.write(file.read())
-			return f.name
-	
+    def store(file, name=""):
+        print(os.listdir(settings.MEDIA_ROOT))
+        return name
+
+    def load(file):
+        return ""

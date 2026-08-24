@@ -1,0 +1,9 @@
+<div class="team-card">
+    {% load static %}
+    {% if not team.profile_pic %}
+    <p>{{team.team_name|slice:"0:2"}}</p>
+    {% else %}
+    <img src="{% get_media_prefix %}{{team.profile_pic}}" />
+    {% endif %}
+    Team: {{team.team_name}}
+</div>

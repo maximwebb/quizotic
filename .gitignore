@@ -3,3 +3,4 @@ notes.md
 db.sqlite3
 __pycache__/
 *.swp
+media/*
