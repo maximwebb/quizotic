@@ -1,12 +1,82 @@
 :root {
-    --main-bg-color: coral;
+    --bg-color: #2e0080;
+    --fg-color: #d800b5;
+    --acc-color: gold;
+    --btn-color: #3fc6e5;
+    --background: red;
 }
 
+* {
+    box-sizing: border-box;
+}
+
+
 body {
-    background-color: var(--main-bg-color);
+    background-color: var(--bg-color);
+    margin-inline: auto;
 }
 
 .btn {
-    padding: 5px;
-    background-color: blue;
+    padding: 1vh 2vh;
+    font-size: 2vh;
+    background-color: var(--btn-color);
+    border: none;
+    color: white;
+}
+
+.btn:hover {
+    cursor: pointer;
+}
+
+.title {
+    color: transparent;
+    -webkit-text-stroke: 0.3vh var(--acc-color); 
+    font-size: 7vh;
+    font-family: sans-serif;
+    text-align: center;
+}
+
+.subtitle {
+    color: var(--acc-color);
+    font-size: 2vh;
+    font-family: sans-serif;
+    text-align: center;
+}
+
+.shimmer {
+    position: relative;
+    border: 0px solid transparent;
+    border-radius: 12px;
+    overflow: hidden;
+    isolation: isolate;
+}
+
+.shimmer::before {
+    content: "";
+    position: absolute;
+    inset: -100vw;
+    z-index: -1;
+
+    background: repeating-conic-gradient(
+        from 0deg,
+        var(--acc-color) 0deg 5deg,
+        color-mix(in srgb, var(--acc-color) 40%, transparent) 5deg 10deg
+    );
+
+    animation: shimmer-spin 10s linear infinite;
+}
+
+.shimmer::after {
+    content: "";
+    position: absolute;
+    inset: 1.5vh;
+    z-index: -1;
+    background: var(--fg-color);
+    border-radius: 12px;
+}
+
+@keyframes shimmer-spin {
+    to {
+        transform: rotate(360deg);
+    }
 }

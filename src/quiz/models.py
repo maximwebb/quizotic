@@ -121,7 +121,7 @@ class GameState(models.Model):
 
     room = models.IntegerField(choices=Room, default=Room.LOBBY)
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
-    code = models.CharField(max_length=8)
+    code = models.CharField(max_length=6)
 
     @property
     def cur_round(self):

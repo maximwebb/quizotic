@@ -5,8 +5,8 @@ from django import forms
 
 class JoinGameForm(forms.Form):
     # TODO: Use an uppercase class to avoid inlining CSS here
-    game_code = forms.CharField(label="Game Code", min_length="8", max_length="8", widget=forms.TextInput(attrs={
-        "style": "text-transform: uppercase;"
+    game_code = forms.CharField(label="Game Code", min_length="6", max_length="6", widget=forms.TextInput(attrs={
+        "class": "game-code"
     }))
 
 

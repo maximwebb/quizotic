@@ -48,7 +48,7 @@ def game(request, game_code=None):
                 quiz.save()
             else:
                 quiz = Quiz.objects.all()[0]
-            code = ''.join(random.choices(string.ascii_uppercase, k=8))
+            code = ''.join(random.choices(string.ascii_uppercase, k=6))
             game = GameState(quiz=quiz, code=code)
             game.save()
             serializer = GameStateSerializer(game)
