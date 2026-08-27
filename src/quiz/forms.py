@@ -4,15 +4,22 @@ from django import forms
 
 
 class JoinGameForm(forms.Form):
-    # TODO: Use an uppercase class to avoid inlining CSS here
     game_code = forms.CharField(label="Game Code", min_length="6", max_length="6", widget=forms.TextInput(attrs={
         "class": "game-code"
     }))
 
 
 class CreateTeamForm(forms.Form):
-    team_name = forms.CharField(label="Team Name", max_length="128")
-    team_leader = forms.CharField(label="Team Leader", max_length="128")
+    team_name = forms.CharField(label=False, max_length="128", widget=forms.TextInput(attrs={
+        "class": "create-team-input std-input cartoon-indent",
+        "autocomplete": "off",
+        "placeholder": "TEAM NAME"
+    }))
+    team_leader = forms.CharField(label=False, max_length="128", widget=forms.TextInput(attrs={
+        "class": "create-team-input std-input cartoon-indent",
+        "autocomplete": "off",
+        "placeholder": "TEAM LEADER"
+    }))
 
 
 class ProfilePicForm(forms.Form):

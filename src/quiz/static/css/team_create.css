@@ -1,0 +1,15 @@
+body {
+    background-color: var(--bg-color);
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    max-width: 60vh;
+    height: 100vh;
+    padding: 20px;
+}
+
+.std-input {
+    color: var(--fg-color-dark);
+}

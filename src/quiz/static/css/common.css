@@ -1,32 +1,36 @@
 :root {
     --bg-color: #2e0080;
-    --fg-color: #d800b5;
-    --acc-color: gold;
-    --btn-color: #3fc6e5;
-    --background: red;
+    --fg-color: #da7820;
+    --fg-color-light: #ffd993;
+    --fg-color-dark: #934313;
+    --acc-color: #ebff00;
+
+    --off-black: #212121;
+    --gray: #343434;
+
+    --btn-color: #a9e300;
+    --btn-color-hover: #d9ff68;
+    --btn-text-color: #cce9ff;
 }
 
 * {
     box-sizing: border-box;
+    font-family: "Open Sans", sans-serif;
+    letter-spacing: 0.22vh;
 }
 
-
-body {
+.std-body {
     background-color: var(--bg-color);
     margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    max-width: 60vh;
+    height: 100vh;
+    padding: 20px;
 }
 
-.btn {
-    padding: 1vh 2vh;
-    font-size: 2vh;
-    background-color: var(--btn-color);
-    border: none;
-    color: white;
-}
-
-.btn:hover {
-    cursor: pointer;
-}
 
 .title {
     color: transparent;
@@ -43,10 +47,84 @@ body {
     text-align: center;
 }
 
+.content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--fg-color);
+    width: 100%;
+    min-height: clamp(60vh, 80vh, 300px);
+    & form {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        & .btn {
+            margin-top: 20px;
+        }
+    }
+    padding: clamp(20px, 6vw, 60px);
+}
+
+.btn {
+    padding: 1vh 2vh;
+    border: none;
+    border-radius: 1vh;
+    background-color: var(--btn-color);
+    font-size: 2vh;
+    font-family: "Open Sans", sans-serif;
+    font-size: 2vh;
+    text-decoration: none;
+    text-transform: uppercase;
+    color: var(--off-black);
+    cursor: pointer;
+    position: relative;
+    user-select: none;
+}
+
+
+
+.btn:hover {
+    cursor: pointer;
+    background-color: var(--btn-color-hover);
+}
+
+.std-input {
+   padding: 1.5vh 2vh; 
+   margin: 0.5vh;
+   background-color: var(--fg-color-light);
+   border: none;
+   /*border-radius: 0.5vh;*/
+   text-align: center;
+   font-size: 2.4vh;
+   color: var(--off-black);
+}
+
+.std-input::placeholder {
+    opacity: 0.8;
+    color: var(--fg-color-dark);
+}
+
+.std-input:focus-visible {
+    outline: none;
+}
+
+
+/* Effects */
+.cartoon-shadow {
+    border: 0.2vh solid var(--off-black);
+    box-shadow: 0.05vh 0.05vh 0 0, 0.1vh 0.1vh 0 0, 0.15vh 0.15vh 0 0, 0.2vh 0.2vh 0 0, 0.25vh 0.25vh 0 0, 0.3vh 0.3vh 0 0;
+}
+
+.cartoon-indent {
+    box-shadow: inset 0vh 0vh 0 0, inset 0.2vh 0.3vh 0 0;;
+}
+
 .shimmer {
     position: relative;
     border: 0px solid transparent;
-    border-radius: 12px;
+    border-radius: 1.5vh;
     overflow: hidden;
     isolation: isolate;
 }

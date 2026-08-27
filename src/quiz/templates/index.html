@@ -5,18 +5,18 @@
     <link rel="stylesheet" href="{% static 'css/common.css' %}"></link>
     <link rel="stylesheet" href="{% static 'css/index.css' %}"></link>
 </head>
-<body>
-    <div id="content" class="shimmer">
-        <p class="title">WELCOME TO QUIZ</p>
+<body class="std-body">
+    <div id="content" class="content shimmer">
+        <p id="welcome-title" class="title">WELCOME TO QUIZ</p>
         <form action="" method="post">
             {% csrf_token %}
             <div class="game-code">
                 {% for i in "123456" %}
-                    <input type="text" maxlength="1">
+                    <input type="text" maxlength="1" class="cartoon-indent">
                 {% endfor %}
                 <input type="hidden" name="game_code" id="game-code-value">
             </div>
-            <input type="submit" value="JOIN ROOM" class="btn">
+            <input type="submit" value="JOIN ROOM" class="btn cartoon-shadow">
         </form>
     </div>
 </body>
