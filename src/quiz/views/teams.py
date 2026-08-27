@@ -33,10 +33,12 @@ def create(request, game_code: str):
     return HttpResponseNotFound()
 
 
+# TODO: Make cur_team optional here
 def list(request, game_code: str):
     game = get_game_by_code(game_code)
     teams = Team.objects.filter(game=game)
-    return render(request, "teams/list.html", {"teams": teams})
+    cur_team = get_cur_team(request)
+    return render(request, "teams/list.html", {"teams": teams, "cur_team": cur_team})
 
 
 def profile(request, game_code: str):

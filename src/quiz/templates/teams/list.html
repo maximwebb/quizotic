@@ -1,23 +1,15 @@
-<style>
-.team-card-list {
-    display: flex;
-    flex-direction: column;
-}
-
-.team-card {
-    padding: 20px;
-    border: 10px solid #FFD556;
-    margin: 10px;
-    font-size: 2em;
-}
-
-.team-card>img {
-    width: 80px;
-    height: 80px;
-}
-</style>
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/team_list.css' %}"></link>
 <div class="team-card-list">
+
+{% if cur_team %}
+{% include "teams/team_card.html" with is_cur_team=True team=cur_team %}
+<p class="std-text">Your competition:</p>
+{% endif %}
+
 {% for team in teams %}
-    {% include "teams/team_card.html" %}
+    {% if team != cur_team %}
+        {% include "teams/team_card.html" with is_cur_team=False %}
+    {% endif %}
 {% endfor %}
 </div>

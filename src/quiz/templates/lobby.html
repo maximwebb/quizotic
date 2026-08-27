@@ -1,18 +1,21 @@
+{% load static %}
 <!doctype html>
 <html>
 <head>
-    {% load static %}
     <script src="{% static 'js/sse.js' %}"> </script>
+    <link rel="stylesheet" href="{% static 'css/common.css' %}"></link>
+    <link rel="stylesheet" href="{% static 'css/lobby.css' %}"></link>
 </head>
 
-<body>
-	<h1>Welcome team {{ cur_team.team_name }} </h1>
-	<h2>Your team leader is {{ cur_team.team_leader }} </h2>
-	<p>Your competition:</p>
-	<div id="team-list">
-		{% include "teams/list.html" %}
-	</div>
-    <a href="{% url 'team_profile' game.code %}">Edit profile</a>
+<body class="std-body var-height">
+    <div class="content shimmer">
+        <p id="welcome-title" class="title-2">Welcome team {{ cur_team.team_name }} </p>
+	    <h2>Your team leader is {{ cur_team.team_leader }} </h2>
+	    <div id="team-list">
+	    	{% include "teams/list.html" %}
+	    </div>
+        <a href="{% url 'team_profile' game.code %}">Edit profile</a>
+    </div>
 </body>
 
 <script>

@@ -2,6 +2,7 @@
     --bg-color: #2e0080;
     --fg-color: #da7820;
     --fg-color-light: #ffd993;
+    --fg-color-lighter: #ffca4b;
     --fg-color-dark: #934313;
     --acc-color: #ebff00;
 
@@ -17,6 +18,8 @@
     box-sizing: border-box;
     font-family: "Open Sans", sans-serif;
     letter-spacing: 0.22vh;
+    font-family: sans-serif;
+    overflow-wrap: anywhere;
 }
 
 .std-body {
@@ -24,11 +27,20 @@
     margin-inline: auto;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
     max-width: 60vh;
-    height: 100vh;
     padding: 20px;
+}
+
+.body-fixed-height {
+    height: 100vh;
+    justify-content: center;
+}
+
+.body-var-height {
+    min-height: 100vh;
+    height: auto;
+    justify-content: flex-start;
 }
 
 
@@ -36,9 +48,23 @@
     color: transparent;
     -webkit-text-stroke: 0.3vh var(--acc-color); 
     font-size: 7vh;
-    font-family: sans-serif;
     text-align: center;
 }
+
+.title-2 {
+    color: var(--acc-color);
+    -webkit-text-stroke: 0.2vh var(--off-black); 
+    font-size: 7vh;
+    font-weight: 600;
+    text-align: center;
+}
+
+.std-text {
+    color: var(--off-black);
+    font-size: 2vh;
+    text-align: center;
+}
+
 
 .subtitle {
     color: var(--acc-color);
@@ -115,6 +141,11 @@
 .cartoon-shadow {
     border: 0.2vh solid var(--off-black);
     box-shadow: 0.05vh 0.05vh 0 0, 0.1vh 0.1vh 0 0, 0.15vh 0.15vh 0 0, 0.2vh 0.2vh 0 0, 0.25vh 0.25vh 0 0, 0.3vh 0.3vh 0 0;
+}
+
+.cartoon-shadow-small {
+    border: 0.2vh solid var(--off-black);
+    box-shadow: 0.05vh 0.05vh 0 0, 0.1vh 0.1vh 0 0, 0.15vh 0.15vh 0 0, 0.2vh 0.2vh 0 0;
 }
 
 .cartoon-indent {

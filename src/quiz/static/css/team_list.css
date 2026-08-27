@@ -1,0 +1,43 @@
+.team-card-list {
+    display: flex;
+    flex-direction: column;
+    & .std-text {
+        text-align: center;
+        margin: 2vh 0 0.5vh 0;
+    }
+}
+
+.team-card {
+    display: flex;
+    align-items: center;
+    padding: 0.5vh 3.5vh 0.5vh 1.5vh;
+    margin: 0.5vh;
+    font-size: 2vh;
+    color: var(--off-black);
+    background-color: var(--fg-color-lighter);
+}
+
+.team-card.team-card-highlight {
+    background-color: var(--fg-color-light);
+}
+
+.team-card-text {
+    overflow-wrap: anywhere;
+}
+
+.profile-pic,
+.profile-pic-alt {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 5vh;
+    height: 5vh;
+    margin: 0.5vh 2vh 0.5vh 0vh;
+    border-radius: 10%;
+    border: 0.0vh 0.4vh solid var(--off-black);
+}
+
+.profile-pic-alt {
+    background-color: white;
+}

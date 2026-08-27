@@ -1,3 +1,5 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/team_list.css' %}"></link>
 <div>
 {% for game in games %}
 <li><a href="{% url 'controller_game' game.code %}">{{game.created}} | Round {{game.round_num}} | Question: {{game.question_num}} | Code: {{game.code}}</a></li>

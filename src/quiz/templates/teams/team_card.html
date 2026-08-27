@@ -1,9 +1,9 @@
-<div class="team-card">
+<div class="team-card cartoon-shadow {% if is_cur_team %}team-card-highlight{% endif %}">
     {% load static %}
     {% if not team.profile_pic %}
-    <p>{{team.team_name|slice:"0:2"}}</p>
+    <p class="profile-pic-alt cartoon-shadow-small">{{team.team_name|slice:"0:2"|upper}}</p>
     {% else %}
-    <img src="{% get_media_prefix %}{{team.profile_pic}}" />
+    <img class="profile-pic cartoon-shadow-small" src="{% get_media_prefix %}{{team.profile_pic}}" />
     {% endif %}
-    Team: {{team.team_name}}
+    <p class="team-card-text">{{team.team_name}}</p>
 </div>
