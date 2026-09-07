@@ -80,6 +80,7 @@ const getRGBA = (x, y) => {
     return JSON.stringify([data[0], data[1], data[2], data[3]]);
 }
 
+
 const draw = (e) => {
     const [x, y] = getXY(e);
     const [qX, qY] = quantise(x, y);
@@ -111,7 +112,7 @@ const test = (x, y, init_rgb, buf) => {
 
     if (y in buf) {
         for (const [l, r] of buf[y]) {
-            if (l <= x <= r) {
+            if (l <= x && x <= r) {
                 return false;
             }
         }
@@ -140,6 +141,10 @@ const drawLineBuffer = (buf) => {
 
 const fill = async (e) => {
     const [x0, y0] = getXY(e);
+    fillInner(x0, y0);
+}
+
+const fillInner = async (x0, y0) => {
     let init_rgb = getRGBA(x0, y0);
 
     let to_visit = [[x0, y0]];
@@ -229,7 +234,6 @@ widthSelect.addEventListener("change", updateStroke);
 colorSelect.addEventListener("change", updateStroke);
 modeSelect.addEventListener("change", updateStroke);
 clearCanvas();
-
 
 </script>
 </html>
