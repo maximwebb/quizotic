@@ -9,7 +9,7 @@
 
 <body class="std-body var-height">
     <div class="content shimmer">
-        <p id="welcome-title" class="title-2">Welcome team {{ cur_team.team_name }} </p>
+        <p id="welcome-title" class="title-2">Welcome {{ cur_team.team_name }} </p>
 	    <h2>Your team leader is {{ cur_team.team_leader }} </h2>
 	    <div id="team-list">
 	    	{% include "teams/list.html" %}
