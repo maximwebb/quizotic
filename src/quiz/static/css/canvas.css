@@ -1,0 +1,102 @@
+/* General */
+#controls * {
+   margin: 0.3vh 0; 
+}
+
+#profileForm {
+    display: none;
+}
+
+
+/* Line Color */
+
+#lineColor {
+  display: flex;
+  gap: 0.5vh;
+}
+
+#lineColor label {
+  cursor: pointer;
+}
+
+#lineColor input {
+  display: none;
+}
+
+#lineColor i {
+  display: block;
+  width: 3vh;
+  height: 3vh;
+  border-radius: 0.5vh;
+  background: var(--c);
+}
+
+#lineColor label:nth-child(1) i { --c: black; }
+#lineColor label:nth-child(2) i { --c: red; }
+#lineColor label:nth-child(3) i { --c: blue; }
+#lineColor label:nth-child(4) i { --c: yellow; }
+#lineColor label:nth-child(5) i { --c: magenta; }
+#lineColor label:nth-child(6) i { --c: lime; }
+#lineColor label:nth-child(7) i { --c: white; }
+
+#lineColor input:checked + i {
+  outline: 0.5vh solid #e8e8e8;
+  outline-offset: 0.1vh;
+}
+
+/* Line Width */
+
+#lineWidth {
+  display: flex;
+  gap: 8px;
+}
+
+#lineWidth input {
+  position: absolute;
+  opacity: 0;
+}
+
+#lineWidth span {
+  display: block;
+  width: 1.5vh;
+  height: 1.5vh;
+  margin: 1.5vh;
+  border-radius: 50%;
+  background: black;
+  cursor: pointer;
+}
+
+#lineWidth label:nth-child(2) span { width: 2.25vh; height: 2.25vh; margin: 1.2vh; }
+#lineWidth label:nth-child(3) span { width: 3.5vh; height: 3.5vh; margin: 0.5vh; }
+#lineWidth label:nth-child(4) span { width: 4.5vh; height: 4.5vh; margin: 0; }
+
+#lineWidth input:checked + span {
+  background: cyan;
+  outline: 0.5vh solid white;
+  outline-offset: 0.5vh;
+}
+
+/* Draw Mode */
+
+#drawMode {
+  display: flex;
+  gap: 8px;
+}
+
+#drawMode input {
+  position: absolute;
+  opacity: 0;
+}
+
+#drawMode span {
+  display: block;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+#drawMode input:checked + span {
+  outline: 3px solid #555;
+  outline-offset: 3px;
+}
+
+

@@ -1,17 +1,23 @@
+{% load static %}
 <!doctype html>
 <html>
-<body>
-    <h1>Edit profile</h1>
+<head>
+    <link rel="stylesheet" href="{% static 'css/common.css' %}"></link>
+    <link rel="stylesheet" href="{% static 'css/edit_profile.css' %}"></link>
+</head>
+<body class="std-body fixed-height">
+    <div class="content shimmer">
+    <h1 class="title">Edit profile</h1>
     {% include "../include/canvas.html" %}
 	<form action="" method="post" id="profileForm" enctype="multipart/form-data">
 	{% csrf_token %}
 	{{ form }}
 	</form>
-	<button onclick="uploadImage()">Submit</button>
+	<button onclick="uploadImage()" class="btn">Submit</button>
+    </div>
 </body>
 
 <script>
-// TODO: Move this to canvas JS file
 const uploadImage = () => {
 	const canvas = document.querySelector("canvas");
 	canvas.toBlob((blob) => {

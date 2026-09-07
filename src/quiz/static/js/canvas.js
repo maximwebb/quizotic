@@ -157,10 +157,9 @@ const fillInner = async (x0, y0) => {
 }
 
 const updateStroke = () => {
-    ctx.fillStyle = colorSelect.selectedOptions[0].value;
-    brushWidth = widthSelect.selectedOptions[0].value;
-    drawMode = modeSelect.selectedOptions[0].value;
-}
+    ctx.fillStyle = document.querySelector('input[name="lineColor"]:checked').value;
+    brushWidth = document.querySelector('input[name="lineWidth"]:checked').value;
+    drawMode = document.querySelector('input[name="drawMode"]:checked').value;}
 
 const clearCanvas = () => {
     console.log("Clearing");

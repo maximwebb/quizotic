@@ -116,6 +116,21 @@
     background-color: var(--btn-color-hover);
 }
 
+.btn-small {
+    padding: 0.5vh 1vh;
+    border: none;
+    border-radius: 0.7vh;
+    background-color: var(--btn-color);
+    font-size: 1.5vh;
+    font-family: "Open Sans", sans-serif;
+    text-decoration: none;
+    text-transform: uppercase;
+    color: var(--off-black);
+    cursor: pointer;
+    position: relative;
+    user-select: none;
+}
+
 .std-input {
    padding: 1.5vh 2vh; 
    margin: 0.5vh;

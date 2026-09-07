@@ -3,38 +3,32 @@
 <html>
 <head>
     <link rel="stylesheet" href="{% static 'css/common.css' %}"></link>
-    <link rel="stylesheet" href="{% static 'css/edit_profile.css' %}"></link>
+    <link rel="stylesheet" href="{% static 'css/canvas.css' %}"></link>
 </head>
 <body>
     <canvas id="cv" width="600" height="600" style="border: 2px solid black; width: 600px; height: 600px"></canvas>
-    <button onclick="clearCanvas()">Clear</button>
-    <div>
-        <h3>Line width</h3>
-        <select id="lineWidth">
-            <option value="1">Small</option>
-            <option value="2">Medium</option>
-            <option value="4" default=true>Large</option>
-            <option value="8">XL</option>
-        </select>
+    <button onclick="clearCanvas()" class="btn-small">Clear</button>
+    <div id="controls">
+    <div id="lineWidth">
+        <label><input type="radio" name="lineWidth" value="1" checked><span></span></label>
+        <label><input type="radio" name="lineWidth" value="2"><span></span></label>
+        <label><input type="radio" name="lineWidth" value="4"><span></span></label>
+        <label><input type="radio" name="lineWidth" value="8"><span></span></label>
+    </div>
+    <div id="lineColor">
+        <label><input type="radio" name="lineColor" value="black" checked><i></i></label>
+        <label><input type="radio" name="lineColor" value="red"><i></i></label>
+        <label><input type="radio" name="lineColor" value="blue"><i></i></label>
+        <label><input type="radio" name="lineColor" value="yellow"><i></i></label>
+        <label><input type="radio" name="lineColor" value="magenta"><i></i></label>
+        <label><input type="radio" name="lineColor" value="lime"><i></i></label>
+        <label><input type="radio" name="lineColor" value="white"><i></i></label>
     </div>
 
-    <div>
-        <h3>Color</h3>
-        <select id="lineColor">
-            <option value="black" color="black">Black</option>
-            <option value="red" color="red">Red</option>
-            <option value="blue" color="blue">Blue</option>
-            <option value="yellow" color="yellow">Yellow</option>
-            <option value="white" color="black">White</option>
-        </select>
+    <div id="drawMode">
+        <label><input type="radio" name="drawMode" value="brush" checked><span>🖌</span></label>
+        <label><input type="radio" name="drawMode" value="fill"><span>🪣</span></label>
     </div>
-
-    <div>
-        <h3>Mode</h3>
-        <select id="drawMode">
-            <option value="brush">Brush</option>
-            <option value="fill">Fill</option>
-        </select>
     </div>
 </body>
 
