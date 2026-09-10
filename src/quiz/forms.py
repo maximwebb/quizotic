@@ -27,8 +27,14 @@ class ProfilePicForm(forms.Form):
 
 
 class MCQForm(forms.Form):
-    choices = forms.MultipleChoiceField(choices=[])
+    choices = forms.ChoiceField(
+        label=False,
+        widget=forms.RadioSelect(attrs={"class": "multi-choice"})
+    )
 
     def __init__(self, choices, *args, **kwargs):
-        super(MCQForm, self).__init__(*args, **kwargs)
-        self.fields["choices"] = forms.MultipleChoiceField(choices=[(c.id, c.text) for c in choices])
+        super().__init__(*args, **kwargs)
+
+        self.fields["choices"].choices = [
+            (c.id, c.text) for c in choices
+        ]

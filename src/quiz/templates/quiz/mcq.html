@@ -1,16 +1,22 @@
+{% load static %}
 <!doctype html>
 <html>
 <head>
-    {% load static %}
     <script src="{% static 'js/sse.js' %}"> </script>
+    <link rel="stylesheet" href="{% static 'css/common.css' %}"></link>
+    <link rel="stylesheet" href="{% static 'css/mcq.css' %}"></link>
 </head>
 
-<body>
-    <h2>{{ question.prompt }}</h2>
-    <form action="" method="post">
-        {% csrf_token %}
-        {{ form }}
-        <input type="submit" value="Submit"> </input>
-    </form>
+<body class="std-body fixed-height">
+    <div class = "content shimmer">
+        <div class="question-container">
+            <p class="question-title">{{ question.prompt }}</p>
+        </div>
+        <form action="" method="post">
+            {% csrf_token %}
+            {{ form }}
+            <input type="submit" value="Submit" class="btn cartoon-shadow"> </input>
+        </form>
+    </div>
 </body>
 </html>

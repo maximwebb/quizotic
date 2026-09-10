@@ -1,0 +1,44 @@
+fieldset {
+    border: none;
+}
+
+.multi-choice {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    & div {
+        margin: 1vh 0;
+    }
+}
+
+.multi-choice li {
+    margin: 0vh;
+    text-align: left;
+}
+
+.multi-choice label {
+    display: block;
+    padding: 1.5vh 16vh 1.5vh 4vh;
+    border: none;
+    border-radius: 0.8vh;
+    background-color: var(--fg-color-light);
+    color: var(--off-black);
+    font-size: 2vh;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.05s ease;
+}
+
+/* Hide the actual radio button */
+.multi-choice input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+}
+
+/* Orange border when selected */
+.multi-choice label:has(input[type="radio"]:checked) {
+    border-color: orange;
+    background: var(--fg-color-lighter);
+    color: var(--fg-color-dark);
+    border: 0.5vh solid var(--fg-color-dark);
+}
