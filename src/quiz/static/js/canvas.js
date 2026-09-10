@@ -1,4 +1,6 @@
 const canvas = document.querySelector("#cv");
+canvas.width = canvas.clientWidth;
+canvas.height = canvas.clientHeight;
 const ctx = canvas.getContext("2d");
 const [gridWidth, gridHeight] = [100, 100];
 const [renderWidth, renderHeight] = [canvas.width, canvas.height];
@@ -33,8 +35,12 @@ const getXY = (e) => {
     return [(e.clientX - rect.left), (e.clientY - rect.top)];
 }
 
+const toGridXY = (x, y) => {
+    return [Math.round(x * (gridWidth/renderWidth)), Math.round(y * (gridHeight/renderHeight))];
+}
+
 const quantise = (x, y) => {
-    return [(Math.round(x * (gridWidth/renderWidth))) * cellWidth, (Math.round(y * (gridHeight/renderHeight))) * cellHeight];
+    return [x * cellWidth, y* cellHeight];
 }
 
 const getRGBA = (x, y) => {
@@ -43,28 +49,34 @@ const getRGBA = (x, y) => {
 }
 
 
-const draw = (e) => {
+const draw = async (e) => {
+    let [x0, y0] = [prevX, prevY];
     const [x, y] = getXY(e);
-    const [qX, qY] = quantise(x, y);
-
+    const [gridX, gridY] = toGridXY(x, y);
     
     let [w, h] = [cellWidth * brushWidth, cellHeight * brushWidth];
-    while (prevX != qX || prevY != qY) {
-        if (prevX == null || prevY == null) {
-            [prevX, prevY] = [qX, qY];
+    let i = 0;
+    while (x0 != gridX || y0 != gridY) {
+        console.log([gridX, gridY]);
+        i += 1;
+        if (x0 == null || y0 == null) {
+            [x0, y0] = [gridX, gridY];
         }
-        if (Math.abs(prevX - qX) > 0) {
-            prevX -= Math.sign(prevX - qX);
+        if (Math.abs(x0 - gridX) > 0) {
+            x0 -= Math.sign(x0 - gridX);
         }
-        if (Math.abs(prevY - qY) > 0) {
-            prevY -= Math.sign(prevY - qY);
+        if (Math.abs(y0 - gridY) > 0) {
+            y0 -= Math.sign(y0 - gridY);
         }
 
-        ctx.fillRect(prevX - w/2, prevY - h/2, w, h);
+        let [qX, qY] = quantise(x0, y0);
+        ctx.fillRect(qX - w/2, qY - h/2, w, h);
+        // Uncomment for some fun visual effects!
+        // await new Promise(r => setTimeout(r, 100));
     }
 
 
-    [prevX, prevY] = [qX, qY];
+    [prevX, prevY] = [gridX, gridY];
 }
 
 const test = (x, y, init_rgb, buf) => {
@@ -162,7 +174,6 @@ const updateStroke = () => {
     drawMode = document.querySelector('input[name="drawMode"]:checked').value;}
 
 const clearCanvas = () => {
-    console.log("Clearing");
     let fill = ctx.fillStyle;
     ctx.fillStyle = "white";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -188,6 +199,7 @@ canvas.addEventListener("mousedown", (e) => {
         console.log(`Invalid draw mode: ${drawMode}`);
     }
 });
+
 
 widthSelect.addEventListener("change", updateStroke);
 colorSelect.addEventListener("change", updateStroke);
