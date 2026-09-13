@@ -4,6 +4,7 @@ from django.urls import reverse
 
 from .common import get_game_by_code, get_cur_team, FileStore
 from .lobby import lobby_view
+from .question import is_submitted
 from ..forms import CreateTeamForm, ProfilePicForm
 from ..models import Team, GameState
 from .. import events
@@ -41,6 +42,18 @@ def list(request, game_code: str):
     return render(request, "teams/list.html", {"teams": teams, "cur_team": cur_team})
 
 
+def submitted(request, game_code: str):
+    game = get_game_by_code(game_code)
+    teams = Team.objects.filter(game=game)
+    sub, not_sub = [], []
+    for team in teams:
+        if is_submitted(team, game):
+            sub.append(team)
+        else:
+            not_sub.append(team)
+    return render(request, "teams/submitted.html", {"sub_teams": sub, "not_sub_teams": not_sub})
+
+
 def profile(request, game_code: str):
     cur_team = get_cur_team(request)
     if request.method == "POST":
@@ -52,6 +65,7 @@ def profile(request, game_code: str):
             cur_team.profile_pic.delete()
             cur_team.profile_pic = img
             cur_team.save()
+            events.push_teams_update()
         else:
             print("expected 1 file, got {len(files)}")
 

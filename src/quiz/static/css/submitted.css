@@ -1,0 +1,74 @@
+.answer-submitted {
+    margin: 2vh 0vh;
+    font-size: 6vh;
+}
+
+.sub-container {
+    padding: 0 4vh 2vh 4vh;
+    margin: 2vh 0vh;
+}
+
+.submitted {
+    background-color: var(--green-light);
+    border: 0.5vh solid var(--green-dark);
+    & .team-card {
+        background-color: var(--green);
+    }
+}
+
+.not-submitted {
+    background-color: var(--red-light);
+    border: 0.5vh solid var(--red-dark);
+    & .team-card {
+        background-color: var(--red);
+    }
+}
+
+
+.submitted-text {
+    text-align: center;
+    font-size: 2vh;
+    font-weight: bold;
+    color: var(--gray);
+}
+
+
+.team-card-list {
+    display: flex;
+    flex-direction: column;
+    & .std-text {
+        text-align: center;
+        margin: 2vh 0 0.5vh 0;
+    }
+}
+
+.team-card {
+    display: flex;
+    align-items: center;
+    padding: 0.1vh 3.5vh 0.1vh 1.5vh;
+    margin: 0.5vh;
+    font-size: 2vh;
+    color: var(--off-black);
+}
+
+
+.team-card-text {
+    overflow-wrap: anywhere;
+}
+
+.profile-pic,
+.profile-pic-alt {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 5vh;
+    height: 5vh;
+    margin: 0.5vh 2vh 0.5vh 0vh;
+    border-radius: 10%;
+    border: 0.0vh 0.4vh solid var(--off-black);
+}
+
+.profile-pic-alt {
+    background-color: white;
+}

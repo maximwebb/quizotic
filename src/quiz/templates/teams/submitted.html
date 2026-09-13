@@ -1,0 +1,15 @@
+{% load static %}
+<div class="sub-container submitted">
+<p class="submitted-text">FAST AS LIGHTNING</p>
+{% for team in sub_teams %}
+    {% include "teams/team_card.html" with is_cur_team=False %}
+{% endfor %}
+</div>
+
+<div class="sub-container not-submitted">
+<p class="submitted-text">SLOW COACHES</p>
+{% for team in not_sub_teams %}
+    {% include "teams/team_card.html" with is_cur_team=False %}
+{% endfor %}
+
+</div>

@@ -1,20 +1,22 @@
 from .common import get_game_by_code, get_cur_team
 from ..models import GameState, Round, QuizRound, RoundQuestion, MultiChoiceQuestion, Choice, Submission
 from ..forms import MCQForm, CreateTeamForm
+from .. import events
 
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseNotFound
 
 
-def is_submitted(team, question):
+def is_submitted(team, game: GameState):
+    question = game.cur_round_question
     return Submission.objects.filter(team=team, question=question).exists()
 
 
 def question_view(request, game_code: str):
-    gs = get_game_by_code(game_code)
+    game = get_game_by_code(game_code)
     team = get_cur_team(request)
 
-    if is_submitted(team, gs.cur_round_question):
+    if is_submitted(team, game):
         return submitted_view(request, game_code)
 
     return mcq_view(request, game_code)
@@ -33,6 +35,7 @@ def mcq_view(request, game_code: str):
         round_question = gs.cur_round_question
         submission = Submission(question=round_question, game=gs, team=team, status=status)
         submission.save()
+        events.push_submitted_update()
         return redirect(request.path)
     elif request.method == "GET":
         question = gs.cur_question
@@ -46,4 +49,5 @@ def mcq_view(request, game_code: str):
 
 
 def submitted_view(request, game_code: str):
-    return render(request, "quiz/submitted.html")
+    context = {"game_code": game_code}
+    return render(request, "quiz/submitted.html", context)

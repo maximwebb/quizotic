@@ -9,6 +9,10 @@ def push_teams_update():
     send_event("events", "update", {"type": "teams"})
 
 
+def push_submitted_update():
+    send_event("events", "update", {"type": "submitted"})
+
+
 def push_room_change():
     send_event("events", "refresh", {"type": "room_change"})
 

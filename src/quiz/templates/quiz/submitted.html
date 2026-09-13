@@ -1,12 +1,40 @@
+{% load static %}
 <!doctype html>
 <html>
 <head>
-    {% load static %}
     <script src="{% static 'js/sse.js' %}"> </script>
+    <link rel="stylesheet" href="{% static 'css/common.css' %}"></link>
+    <link rel="stylesheet" href="{% static 'css/submitted.css' %}"></link>
 </head>
 
-<body>
-    <h2>Submitted</h2>
-    <p>Please wait...</p>
+<body class="std-body fixed-height">
+    <div class="content shimmer">
+        <p class="title-2 answer-submitted">Answer submitted!</p>
+        <div id="sub-comparison">
+        </div>
+    </div>
 </body>
+
+<script>
+sse.addEventListener("update", async (e) => {
+	let ev = JSON.parse(e.data);
+	if (ev.type == "submitted") {
+		await refreshSubmitted();
+	}
+	else {
+		console.log(`Got unrecognised event type: ${ev.type}`);
+	}
+});
+
+
+const refreshSubmitted = async () => {
+    const res = await fetch("/teams/submitted/{{game_code}}");
+	const html = await res.text();
+    console.log("Fetching subs");
+
+	document.querySelector("#sub-comparison").innerHTML = html;
+};
+
+refreshSubmitted();
+</script>
 </html>
