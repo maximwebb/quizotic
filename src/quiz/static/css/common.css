@@ -17,6 +17,7 @@
     --red: #ff4949;
     --red-light: #ff8a8a;
     --red-dark: #6a2626;
+    --hot-pink: #ff3ab2;
 
     --btn-color: #a9e300;
     --btn-color-hover: #d9ff68;
@@ -41,7 +42,7 @@
     padding: 20px;
 }
 
-.body-fixed-height {
+.fixed-height {
     height: 100vh;
     justify-content: center;
 }
@@ -176,7 +177,6 @@
     outline: none;
 }
 
-
 /* Effects */
 .cartoon-shadow {
     border: 0.2vh solid var(--off-black);
@@ -228,4 +228,14 @@
     to {
         transform: rotate(360deg);
     }
+}
+
+.text-highlight {
+    padding: 2vh;
+    background-color: var(--hot-pink);
+    color: var(--off-white);
+    font-weight: bold;
+    font-size: 2vh;
+    text-transform: uppercase;
+    box-shadow:  0.8vh 0.8vh 0 0 var(--off-black);
 }

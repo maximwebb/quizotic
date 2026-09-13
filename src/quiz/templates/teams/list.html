@@ -4,7 +4,7 @@
 
 {% if cur_team %}
 {% include "teams/team_card.html" with is_cur_team=True team=cur_team %}
-<p class="std-text">Your competition:</p>
+<h2 class="std-text">Your competition:</h2>
 {% endif %}
 
 {% for team in teams %}
