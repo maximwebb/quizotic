@@ -1,5 +1,6 @@
 :root {
     --bg-color: #2e0080;
+    --bg-color-light: #6d3cc3;
     --fg-color: #da7820;
     --fg-color-light: #ffd993;
     --fg-color-lighter: #ffca4b;
@@ -230,9 +231,10 @@
     }
 }
 
-.text-highlight {
+/* Used to create a textbox with an exaggerated shadow */
+.cartoon-textbox {
     padding: 2vh;
-    background-color: var(--hot-pink);
+    background-color: var(--bg-color-light);
     color: var(--off-white);
     font-weight: bold;
     font-size: 2vh;
