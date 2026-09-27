@@ -48,6 +48,29 @@ def mcq_view(request, game_code: str):
         return HttpResponseNotFound()
 
 
+def textbox_view(request, game_code: str):
+    gs = get_game_by_code(game_code)
+    team = get_cur_team(request)
+
+    if request.method == "POST":
+        ans = request.POST["text"]
+        print(ans)
+
+        round_question = gs.cur_round_question
+        submission = Submission(question=round_question, game=gs, team=team, status=Submission.Status.PENDING)
+        submission.save()
+        events.push_submitted_update()
+        return redirect(request.path)
+    elif request.method == "GET":
+        question = gs.cur_question
+        form = TextboxForm(choices)
+        context = {"question": question, "form": form}
+
+        return render(request, "quiz/textbox.html", context)
+    else:
+        return HttpResponseNotFound()
+
+
 def submitted_view(request, game_code: str):
     context = {"game_code": game_code}
     return render(request, "quiz/submitted.html", context)
