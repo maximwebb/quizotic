@@ -3,7 +3,7 @@
 	<div id="game-list">
 		{% include "controller/game_list.html" %}
 	</div>
-	<button onclick="newGame()">Create New Game</button>
+    <a href="{% url 'create_game' %}">Create New Game</a>
 	{% csrf_token %}
 </body>
 </head>

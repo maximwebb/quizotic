@@ -3,6 +3,10 @@ from .models import GameState
 from django import forms
 
 
+class CreateGameForm(forms.Form):
+    new_quiz = forms.FileField()
+
+
 class JoinGameForm(forms.Form):
     game_code = forms.CharField(label="Game Code", min_length="6", max_length="6", widget=forms.TextInput(attrs={
         "class": "game-code"

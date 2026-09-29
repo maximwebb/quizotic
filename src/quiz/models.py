@@ -73,6 +73,7 @@ class QuizRound(models.Model):
 
 
 class Quiz(models.Model):
+    created = models.DateTimeField(default=datetime.now, blank=True)
     name = models.CharField(max_length=128, blank=True)
     rounds = models.ManyToManyField(Round, through=QuizRound, related_name="+")
 

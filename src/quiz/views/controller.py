@@ -1,11 +1,13 @@
 from .. import events
+from ..forms import CreateGameForm
 from ..models import *
 from ..serializers import GameStateSerializer
 from ..views.common import get_game_by_code
 
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadRequest, JsonResponse
 from django.core import serializers
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound, HttpResponseBadRequest, JsonResponse
+from django.urls import reverse
 
 import json
 import random
@@ -25,6 +27,35 @@ def game_select_view(request):
     return render(request, "controller/index.html", context)
 
 
+def create_game(request):
+    if request.method == "POST":
+        files = request.FILES
+        print(request.POST)
+        if len(files) == 1:
+            file = next(files.values())
+            quiz = create_quiz_from_json(file.read())
+            quiz.save()
+        elif request.POST["quiz_id"] is not None:
+            quiz = Quiz.objects.get(id=request.POST["quiz_id"])
+        else:
+            return HttpResponseNotFound()
+
+        game_code = ''.join(random.choices(string.ascii_uppercase, k=6))
+        game = GameState(quiz=quiz, code=game_code)
+        game.save()
+
+        return HttpResponseRedirect(reverse("controller_game", args=(game_code,)))
+
+    elif request.method == "GET":
+        quiz_list = Quiz.objects.all().order_by("-created")[:6]
+        form = CreateGameForm()
+        context = {"form": form, "quiz_list": quiz_list}
+
+        return render(request, "controller/create.html", context)
+
+    return HttpResponseNotFound()
+
+
 def game_view(request, game_code: str):
     if request.method == "GET":
         game = get_game_by_code(game_code)
@@ -40,47 +71,34 @@ def game_state_view(request, game_code: str):
 
 
 def game(request, game_code=None):
+    if request.method != "GET":
+        return HttpResponseNotFound()
+
+    # List all games if no game code specified
     if game_code is None:
-        if request.method == "POST":
-            # TODO: Select quiz
-            if len(Quiz.objects.all()) == 0:
-                quiz = Quiz(name="Empty Quiz")
-                quiz.save()
-            else:
-                quiz = Quiz.objects.all()[0]
-            code = ''.join(random.choices(string.ascii_uppercase, k=6))
-            game = GameState(quiz=quiz, code=code)
-            game.save()
-            serializer = GameStateSerializer(game)
-            return JsonResponse(serializer.data)
-        elif request.method == "GET":
-            games = GameState.objects.all().order_by("-created")
-            serializer = GameStateSerializer(games, many=True)
-            return JsonResponse(serializer.data, safe=False)
-        else:
-            return None
+        games = GameState.objects.all().order_by("-created")
+        serializer = GameStateSerializer(games, many=True)
+        return JsonResponse(serializer.data, safe=False)
 
-    if request.method == "GET":
-        game = get_game_by_code(game_code)
-        serializer = GameStateSerializer(game)
-        return JsonResponse(serializer.data)
-
-    return None
+    game = get_game_by_code(game_code)
+    serializer = GameStateSerializer(game)
+    return JsonResponse(serializer.data)
 
 
-def create_quiz_from_file(request):
-    path = "quizzes/sample_quiz.json"
-    with open(path) as f:
-        data = json.load(f)
+def create_quiz_from_json(raw):
+    try:
+        data = json.loads(raw)
+    except Exception as e:
+        print(f"error: {e}")
 
     rounds = []
     quiz = Quiz(name=data["name"])
     quiz.save()
     for r_i, r in enumerate(data["rounds"]):
         round = Round(name=r["name"])
-        ord_round = QuizRound(quiz=quiz, round=round, order=r_i)
-
         round.save()
+
+        ord_round = QuizRound(quiz=quiz, round=round, order=r_i)
         ord_round.save()
 
         for q_i, q in enumerate(r["questions"]):
@@ -116,7 +134,7 @@ def create_quiz_from_file(request):
 
     quiz.save()
 
-    return HttpResponse()
+    return quiz
 
 
 def game_action(request, game_code: str, action: str):
