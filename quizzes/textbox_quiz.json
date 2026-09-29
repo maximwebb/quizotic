@@ -1,0 +1,45 @@
+{
+	"name": "Textbox Quiz",
+	"rounds": [
+		{
+			"name": "Trivia",
+			"questions": [
+				{
+					"type": "textbox",
+					"prompt": "What is the host's name?"
+				},
+				{
+					"type": "mcq",
+					"prompt": "Who is the president of France?",
+					"choices": [
+						"Emmanuel Macron",
+						"Dua Lipa",
+						"Franz Kafka",
+						"John Cleese"
+					],
+					"answer": "Emmanuel Macron"
+				}
+			]
+		},
+		{
+			"name": "Science",
+			"questions": [
+				{
+					"type": "textbox",
+					"prompt": "How many planets are there in the solar system?"
+				},
+				{
+					"type": "mcq",
+					"prompt": "What is the largest planet?",
+					"choices": [
+						"Earth",
+						"Venus",
+						"Jupiter",
+						"The moon"
+					],
+					"answer": "Jupiter"
+				}
+			]
+		}
+	]
+}

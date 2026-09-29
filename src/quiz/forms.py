@@ -42,3 +42,10 @@ class MCQForm(forms.Form):
         self.fields["choices"].choices = [
             (c.id, c.text) for c in choices
         ]
+
+
+class TextboxForm(forms.Form):
+    text = forms.CharField(label=False, max_length="256", widget=forms.TextInput(attrs={
+        "class": "",
+        "autocomplete": "off",
+    }))

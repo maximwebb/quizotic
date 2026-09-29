@@ -46,6 +46,10 @@ class MultiChoiceQuestion(Question):
     pass
 
 
+class TextboxQuestion(Question):
+    pass
+
+
 class Round(models.Model):
     name = models.CharField(max_length=128, blank=True)
     questions = models.ManyToManyField(
