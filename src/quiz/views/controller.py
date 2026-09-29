@@ -30,12 +30,13 @@ def game_select_view(request):
 def create_game(request):
     if request.method == "POST":
         files = request.FILES
+        print(request.POST)
         if len(files) == 1:
             file = next(files.values())
             quiz = create_quiz_from_json(file.read())
             quiz.save()
         elif request.POST["quiz_id"] is not None:
-            quiz = quiz.objects.get(id=quiz_id)
+            quiz = Quiz.objects.get(id=request.POST["quiz_id"])
         else:
             return HttpResponseNotFound()
 
