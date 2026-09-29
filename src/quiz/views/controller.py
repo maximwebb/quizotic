@@ -1,4 +1,5 @@
 from .. import events
+from ..forms import CreateGameForm
 from ..models import *
 from ..serializers import GameStateSerializer
 from ..views.common import get_game_by_code
@@ -25,6 +26,22 @@ def game_select_view(request):
     return render(request, "controller/index.html", context)
 
 
+def create_quiz_view(request):
+    if request.method == "POST":
+        files = request.FILES
+        assert len(files) == 1, f"Expected 1 file, got {len(files)}"
+        file = next(files.values())
+        quiz = create_quiz_from_json(file.read())
+        return game(request, quiz_id=quiz.id)
+
+    context = {}
+    # quiz_list = Quiz.objects.all().order_by("-created")[:3]
+    form = CreateGameForm()
+    context["form"] = form
+
+    return render(request, "controller/create.html", context)
+
+
 def game_view(request, game_code: str):
     if request.method == "GET":
         game = get_game_by_code(game_code)
@@ -39,15 +56,13 @@ def game_state_view(request, game_code: str):
         return render(request, "controller/game_state.html", context)
 
 
-def game(request, game_code=None):
+# Create new or select existing game
+def game(request, game_code=None, quiz_id=None):
     if game_code is None:
         if request.method == "POST":
-            # TODO: Select quiz
-            if len(Quiz.objects.all()) == 0:
-                quiz = Quiz(name="Empty Quiz")
-                quiz.save()
-            else:
-                quiz = Quiz.objects.all()[0]
+            if quiz is None:
+                quiz_id = request.POST["quiz_id"]
+                quiz = Quiz.objects.get(id=quiz_id)
             code = ''.join(random.choices(string.ascii_uppercase, k=6))
             game = GameState(quiz=quiz, code=code)
             game.save()
@@ -68,19 +83,20 @@ def game(request, game_code=None):
     return None
 
 
-def create_quiz_from_file(request):
-    path = "quizzes/sample_quiz.json"
-    with open(path) as f:
-        data = json.load(f)
+def create_quiz_from_json(raw):
+    try:
+        data = json.loads(raw)
+    except Exception as e:
+        print(f"error: {e}")
 
     rounds = []
     quiz = Quiz(name=data["name"])
     quiz.save()
     for r_i, r in enumerate(data["rounds"]):
         round = Round(name=r["name"])
-        ord_round = QuizRound(quiz=quiz, round=round, order=r_i)
-
         round.save()
+
+        ord_round = QuizRound(quiz=quiz, round=round, order=r_i)
         ord_round.save()
 
         for q_i, q in enumerate(r["questions"]):
@@ -116,7 +132,7 @@ def create_quiz_from_file(request):
 
     quiz.save()
 
-    return HttpResponse()
+    return quiz
 
 
 def game_action(request, game_code: str, action: str):

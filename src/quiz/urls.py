@@ -13,6 +13,7 @@ urlpatterns = [
     path("teams/submitted/<str:game_code>", teams.submitted, name="team_submitted"),
     path("teams/profile/<str:game_code>", teams.profile, name="team_profile"),
     path("quiz/<str:game_code>", quiz.quiz_view, name="quiz"),
+    path("controller/create", controller.create_quiz_view, name="controller_create"),
     path("controller/<str:game_code>", controller.game_view, name="controller_game"),
     path("controller/<str:game_code>/state", controller.game_state_view, name="controller_game_state"),
     path("controller", controller.game_select_view, name="controller_select"),
@@ -20,7 +21,6 @@ urlpatterns = [
     path("game/<str:game_code>/room/<str:room>", controller.game_room, name="game_room"),
     path("game/<str:game_code>", controller.game, name="game"),
     path("game", controller.game, name="game_list"),
-    path("create-quiz", controller.create_quiz_from_file, name="create_quiz"),
     path("canvas", index.canvas_view, name="canvas"),
     path("events/", include(django_eventstream.urls), {"channels": ["events"]}),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
