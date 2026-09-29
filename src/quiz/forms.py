@@ -40,5 +40,5 @@ class MCQForm(forms.Form):
         super().__init__(*args, **kwargs)
 
         self.fields["choices"].choices = [
-            (c.id, c.title) for c in choices
+            (c.id, c.text) for c in choices
         ]

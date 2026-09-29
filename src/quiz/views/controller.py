@@ -5,8 +5,9 @@ from ..serializers import GameStateSerializer
 from ..views.common import get_game_by_code
 
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadRequest, JsonResponse
 from django.core import serializers
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound, HttpResponseBadRequest, JsonResponse
+from django.urls import reverse
 
 import json
 import random
@@ -26,20 +27,32 @@ def game_select_view(request):
     return render(request, "controller/index.html", context)
 
 
-def create_quiz_view(request):
+def create_game(request):
     if request.method == "POST":
         files = request.FILES
-        assert len(files) == 1, f"Expected 1 file, got {len(files)}"
-        file = next(files.values())
-        quiz = create_quiz_from_json(file.read())
-        return game(request, quiz_id=quiz.id)
+        if len(files) == 1:
+            file = next(files.values())
+            quiz = create_quiz_from_json(file.read())
+            quiz.save()
+        elif request.POST["quiz_id"] is not None:
+            quiz = quiz.objects.get(id=quiz_id)
+        else:
+            return HttpResponseNotFound()
 
-    context = {}
-    # quiz_list = Quiz.objects.all().order_by("-created")[:3]
-    form = CreateGameForm()
-    context["form"] = form
+        game_code = ''.join(random.choices(string.ascii_uppercase, k=6))
+        game = GameState(quiz=quiz, code=game_code)
+        game.save()
 
-    return render(request, "controller/create.html", context)
+        return HttpResponseRedirect(reverse("controller_game", args=(game_code,)))
+
+    elif request.method == "GET":
+        quiz_list = Quiz.objects.all().order_by("-created")[:6]
+        form = CreateGameForm()
+        context = {"form": form, "quiz_list": quiz_list}
+
+        return render(request, "controller/create.html", context)
+
+    return HttpResponseNotFound()
 
 
 def game_view(request, game_code: str):
@@ -56,31 +69,19 @@ def game_state_view(request, game_code: str):
         return render(request, "controller/game_state.html", context)
 
 
-# Create new or select existing game
-def game(request, game_code=None, quiz_id=None):
+def game(request, game_code=None):
+    if request.method != "GET":
+        return HttpResponseNotFound()
+
+    # List all games if no game code specified
     if game_code is None:
-        if request.method == "POST":
-            if quiz is None:
-                quiz_id = request.POST["quiz_id"]
-                quiz = Quiz.objects.get(id=quiz_id)
-            code = ''.join(random.choices(string.ascii_uppercase, k=6))
-            game = GameState(quiz=quiz, code=code)
-            game.save()
-            serializer = GameStateSerializer(game)
-            return JsonResponse(serializer.data)
-        elif request.method == "GET":
-            games = GameState.objects.all().order_by("-created")
-            serializer = GameStateSerializer(games, many=True)
-            return JsonResponse(serializer.data, safe=False)
-        else:
-            return None
+        games = GameState.objects.all().order_by("-created")
+        serializer = GameStateSerializer(games, many=True)
+        return JsonResponse(serializer.data, safe=False)
 
-    if request.method == "GET":
-        game = get_game_by_code(game_code)
-        serializer = GameStateSerializer(game)
-        return JsonResponse(serializer.data)
-
-    return None
+    game = get_game_by_code(game_code)
+    serializer = GameStateSerializer(game)
+    return JsonResponse(serializer.data)
 
 
 def create_quiz_from_json(raw):
