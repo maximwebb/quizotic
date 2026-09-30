@@ -45,8 +45,10 @@ class MCQForm(forms.Form):
 
 
 class TextboxForm(forms.Form):
-    text = forms.CharField(label=False, max_length="256", widget=forms.TextInput(attrs={
-        "class": "",
+    text = forms.CharField(label=False, max_length="256", widget=forms.Textarea(attrs={
+        "class": "textbox std-input",
         "autocomplete": "off",
-        "placeholder": "Max length 256"
+        "placeholder": "Max length 256",
+        "cols": "20",
+        "rows": "4"
     }))
