@@ -5,6 +5,7 @@ from .models import *
 admin.site.register(GameState)
 admin.site.register(Team)
 admin.site.register(Submission)
+admin.site.register(TextSubmission)
 
 # Display many-to-many relationships in admin dashboard
 

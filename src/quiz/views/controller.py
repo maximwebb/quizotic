@@ -104,23 +104,27 @@ def create_quiz_from_json(raw):
         for q_i, q in enumerate(r["questions"]):
             prompt = q["prompt"]
 
-            if q["type"] == "mcq":
-                question = MultiChoiceQuestion(prompt=prompt)
-                question.save()
+            match q["type"]:
+                case "mcq":
+                    question = MultiChoiceQuestion(prompt=prompt)
+                    question.save()
 
-                ans = q["answer"]
-                exists_correct = False
-                for c in q["choices"]:
-                    is_correct = c == ans
-                    exists_correct |= is_correct
-                    choice = Choice(text=c, question=question, is_correct=is_correct)
-                    choice.save()
-                if not exists_correct:
-                    print(f"[R{r_i}|Q{q_i}] MCQ answer \"{ans}\" not included in choices: {','.join(q['choices'])}")
+                    ans = q["answer"]
+                    exists_correct = False
+                    for c in q["choices"]:
+                        is_correct = c == ans
+                        exists_correct |= is_correct
+                        choice = Choice(text=c, question=question, is_correct=is_correct)
+                        choice.save()
+                    if not exists_correct:
+                        print(f"[R{r_i}|Q{q_i}] MCQ answer \"{ans}\" not included in choices: {','.join(q['choices'])}")
+                        return HttpResponseBadRequest()
+                case "textbox":
+                    question = TextboxQuestion(prompt=prompt)
+                    question.save()
+                case _:
+                    print(f"[R{r_i}|Q{q_i}] got bad question type: {q['type']}")
                     return HttpResponseBadRequest()
-            else:
-                print(f"[R{r_i}|Q{q_i}] got bad question type: {q['type']}")
-                return HttpResponseBadRequest()
 
             ord_question = RoundQuestion(round=round, question=question, order=q_i)
             ord_question.save()

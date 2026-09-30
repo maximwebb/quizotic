@@ -48,4 +48,5 @@ class TextboxForm(forms.Form):
     text = forms.CharField(label=False, max_length="256", widget=forms.TextInput(attrs={
         "class": "",
         "autocomplete": "off",
+        "placeholder": "Max length 256"
     }))
