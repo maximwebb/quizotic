@@ -99,6 +99,7 @@ class Quiz(models.Model):
 
 
 # Used by all question types - answer data split out into separate Submission types (e.g. TextSubmission)
+# If adding new submission type, make sure to update marking_view in controller to handle
 class Submission(models.Model):
     question = models.ForeignKey(RoundQuestion, on_delete=models.CASCADE)
     game = models.ForeignKey("GameState", on_delete=models.CASCADE)

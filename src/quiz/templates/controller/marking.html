@@ -1,0 +1,45 @@
+{% load static %}
+<!doctype html>
+<html>
+<head>
+    <script src="{% static 'js/sse.js' %}"> </script>
+    <link rel="stylesheet" href="{% static 'css/common.css' %}"></link>
+    <link rel="stylesheet" href="{% static 'css/controller/marking.css' %}"></link>
+</head>
+<body class="std-body var-height">
+    <div class="content">
+        <h1>Mark User Submissions</h1>
+        <a href="{% url 'controller_game' game.code %}">Back</a>
+        <div id="submission-list">
+            {% for v in unmarked_text %}
+            <div class="submission">
+                {{v.submission.team.team_name}}: {{v.text}}
+                <button>✔️</button>
+                <button>✘</button>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+<script>
+sse.addEventListener("update", async (e) => {
+	let ev = JSON.parse(e.data);
+	if (ev.type == "submitted") {
+		await refreshSubmissionList();
+	}
+	else {
+		console.log(`Ignoring event type: ${ev.type}`);
+	}
+});
+
+
+const refreshSubmissionList = async () => {
+    const res = await fetch("/teams/list/{{game_code}}");
+	const html = await res.text();
+
+	document.querySelector("#submission-list").innerHTML = html;
+};
+
+
+</script>
+</html>

@@ -70,6 +70,19 @@ def game_state_view(request, game_code: str):
         return render(request, "controller/game_state.html", context)
 
 
+def marking_view(request, game_code: str):
+    if request.method == "POST":
+        pass
+
+    game = get_game_by_code(game_code)
+    unmarked = Submission.objects.filter(status=Submission.Status.PENDING, game=game.id)
+    print(unmarked)
+    unmarked_text = TextSubmission.objects.filter(submission__in=unmarked).select_related('submission')
+    print({t: t.text for t in unmarked_text})
+    context = {"unmarked": unmarked, "unmarked_text": unmarked_text, "game": game}
+    return render(request, "controller/marking.html", context)
+
+
 def game(request, game_code=None):
     if request.method != "GET":
         return HttpResponseNotFound()
