@@ -11,17 +11,36 @@
         <h1>Mark User Submissions</h1>
         <a href="{% url 'controller_game' game.code %}">Back</a>
         <div id="submission-list">
+            {% if unmarked_text|length == 0 %}
+            <p>All done!</p>
+            {% endif %}
             {% for v in unmarked_text %}
             <div class="submission">
                 {{v.submission.team.team_name}}: {{v.text}}
-                <button>✔️</button>
-                <button>✘</button>
+                <button onclick="markSubmission({{v.submission.id}}, true)">✔️</button>
+                <button onclick="markSubmission({{v.submission.id}}, false)">✘</button>
             </div>
             {% endfor %}
         </div>
     </div>
+	{% csrf_token %}
 </body>
 <script>
+// TODO: Move this to dedicated file
+const fetch_with_csrf = async (endpoint, fields={}, body={}) => { 
+	const csrf = document.querySelector("input").value;
+
+	if (!fields.hasOwnProperty("headers")) {
+		fields["headers"] = {};
+	}
+
+	fields["headers"]["X-CSRFToken"] = csrf;
+	fields["mode"] = "same-origin";
+
+	return await fetch(endpoint, fields);
+}
+
+
 sse.addEventListener("update", async (e) => {
 	let ev = JSON.parse(e.data);
 	if (ev.type == "submitted") {
@@ -34,12 +53,25 @@ sse.addEventListener("update", async (e) => {
 
 
 const refreshSubmissionList = async () => {
-    const res = await fetch("/teams/list/{{game_code}}");
+    const res = await fetch("/controller/{{game.code}}/marking");
 	const html = await res.text();
 
-	document.querySelector("#submission-list").innerHTML = html;
+	document.body.innerHTML = html;
 };
 
 
+const markSubmission = async (submission_id, is_correct) => {
+    body = new URLSearchParams({
+        submission_id: String(submission_id),
+        is_correct: String(is_correct),
+    });
+    const resp = await fetch_with_csrf("/controller/{{game.code}}/marking", { 
+        method: "POST",
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: body,
+    });
+
+    refreshSubmissionList();
+}
 </script>
 </html>

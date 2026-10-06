@@ -4,6 +4,7 @@
     <h1>Game Control Panel {{ game.code }}</h1>
 	<div id = "game-state">
 	</div>
+    <a href="{% url 'controller_marking' game.code %}">Mark submissions</a>
 	<div id = "team-list">
 		{% include "../teams/list.html" %}
 	</div>
