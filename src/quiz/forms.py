@@ -42,3 +42,13 @@ class MCQForm(forms.Form):
         self.fields["choices"].choices = [
             (c.id, c.text) for c in choices
         ]
+
+
+class TextboxForm(forms.Form):
+    text = forms.CharField(label=False, max_length="256", widget=forms.Textarea(attrs={
+        "class": "textbox std-input",
+        "autocomplete": "off",
+        "placeholder": "Max length 256",
+        "cols": "20",
+        "rows": "4"
+    }))

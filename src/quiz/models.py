@@ -16,6 +16,12 @@ class Team(models.Model):
 class Question(models.Model):
     prompt = models.CharField(max_length=256)
 
+    class Type(models.IntegerChoices):
+        MCQ = 1
+        TEXTBOX = 2
+
+    question_type = models.IntegerField(choices=Type, default=Type.MCQ)
+
     def __str__(self):
         return self.prompt
 
@@ -43,7 +49,15 @@ class Choice(models.Model):
 
 
 class MultiChoiceQuestion(Question):
-    pass
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.question_type = Question.Type.MCQ
+
+
+class TextboxQuestion(Question):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.question_type = Question.Type.TEXTBOX
 
 
 class Round(models.Model):
@@ -84,6 +98,8 @@ class Quiz(models.Model):
         return self.name
 
 
+# Used by all question types - answer data split out into separate Submission types (e.g. TextSubmission)
+# If adding new submission type, make sure to update marking_view in controller to handle
 class Submission(models.Model):
     question = models.ForeignKey(RoundQuestion, on_delete=models.CASCADE)
     game = models.ForeignKey("GameState", on_delete=models.CASCADE)
@@ -107,6 +123,11 @@ class Submission(models.Model):
 
     def __str__(self):
         return f"{self.team.team_name}|R{self.round_num}|Q{self.question_num}|{self.status}"
+
+
+class TextSubmission(models.Model):
+    submission = models.ForeignKey(Submission, on_delete=models.CASCADE)
+    text = models.CharField(max_length=256)
 
 
 class GameState(models.Model):

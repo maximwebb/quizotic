@@ -2,7 +2,8 @@ from .. import events
 from ..forms import CreateGameForm
 from ..models import *
 from ..serializers import GameStateSerializer
-from ..views.common import get_game_by_code
+from .util import parse_bool
+from .common import get_game_by_code
 
 from django.shortcuts import render
 from django.core import serializers
@@ -70,6 +71,27 @@ def game_state_view(request, game_code: str):
         return render(request, "controller/game_state.html", context)
 
 
+def marking_view(request, game_code: str):
+    if request.method == "POST":
+        submission_id = request.POST["submission_id"]
+        is_correct = parse_bool(request.POST["is_correct"])
+        if is_correct is None:
+            print(f"Error parsing `is_correct`: {request.POST['is_correct']}")
+            return HttpResponseBadRequest()
+        submission = Submission.objects.get(id=submission_id)
+        submission.status = Submission.Status.CORRECT if is_correct else Submission.Status.INCORRECT
+        submission.save()
+
+        return HttpResponse()
+
+    elif request.method == "GET":
+        game = get_game_by_code(game_code)
+        unmarked = Submission.objects.filter(status=Submission.Status.PENDING, game=game.id)
+        unmarked_text = TextSubmission.objects.filter(submission__in=unmarked).select_related('submission')
+        context = {"unmarked": unmarked, "unmarked_text": unmarked_text, "game": game}
+        return render(request, "controller/marking.html", context)
+
+
 def game(request, game_code=None):
     if request.method != "GET":
         return HttpResponseNotFound()
@@ -104,23 +126,27 @@ def create_quiz_from_json(raw):
         for q_i, q in enumerate(r["questions"]):
             prompt = q["prompt"]
 
-            if q["type"] == "mcq":
-                question = MultiChoiceQuestion(prompt=prompt)
-                question.save()
+            match q["type"]:
+                case "mcq":
+                    question = MultiChoiceQuestion(prompt=prompt)
+                    question.save()
 
-                ans = q["answer"]
-                exists_correct = False
-                for c in q["choices"]:
-                    is_correct = c == ans
-                    exists_correct |= is_correct
-                    choice = Choice(text=c, question=question, is_correct=is_correct)
-                    choice.save()
-                if not exists_correct:
-                    print(f"[R{r_i}|Q{q_i}] MCQ answer \"{ans}\" not included in choices: {','.join(q['choices'])}")
+                    ans = q["answer"]
+                    exists_correct = False
+                    for c in q["choices"]:
+                        is_correct = c == ans
+                        exists_correct |= is_correct
+                        choice = Choice(text=c, question=question, is_correct=is_correct)
+                        choice.save()
+                    if not exists_correct:
+                        print(f"[R{r_i}|Q{q_i}] MCQ answer \"{ans}\" not included in choices: {','.join(q['choices'])}")
+                        return HttpResponseBadRequest()
+                case "textbox":
+                    question = TextboxQuestion(prompt=prompt)
+                    question.save()
+                case _:
+                    print(f"[R{r_i}|Q{q_i}] got bad question type: {q['type']}")
                     return HttpResponseBadRequest()
-            else:
-                print(f"[R{r_i}|Q{q_i}] got bad question type: {q['type']}")
-                return HttpResponseBadRequest()
 
             ord_question = RoundQuestion(round=round, question=question, order=q_i)
             ord_question.save()

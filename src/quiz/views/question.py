@@ -1,6 +1,6 @@
-from .common import get_game_by_code, get_cur_team
-from ..models import GameState, Round, QuizRound, RoundQuestion, MultiChoiceQuestion, Choice, Submission
-from ..forms import MCQForm, CreateTeamForm
+from .common import get_game_by_code, get_cur_question_by_code, get_cur_team
+from ..models import GameState, Round, QuizRound, Question, RoundQuestion, MultiChoiceQuestion, TextboxQuestion, Choice, Submission, TextSubmission
+from ..forms import MCQForm, TextboxForm
 from .. import events
 
 from django.shortcuts import render, redirect
@@ -19,7 +19,14 @@ def question_view(request, game_code: str):
     if is_submitted(team, game):
         return submitted_view(request, game_code)
 
-    return mcq_view(request, game_code)
+    question_type = get_cur_question_by_code(game_code).question_type
+    match question_type:
+        case Question.Type.MCQ:
+            return mcq_view(request, game_code)
+        case Question.Type.TEXTBOX:
+            return textbox_view(request, game_code)
+        case _:
+            return HttpResponseNotFound()
 
 
 def mcq_view(request, game_code: str):
@@ -44,6 +51,31 @@ def mcq_view(request, game_code: str):
         context = {"question": question, "form": form}
 
         return render(request, "quiz/mcq.html", context)
+    else:
+        return HttpResponseNotFound()
+
+
+def textbox_view(request, game_code: str):
+    gs = get_game_by_code(game_code)
+    team = get_cur_team(request)
+
+    if request.method == "POST":
+        ans = request.POST["text"]
+        round_question = gs.cur_round_question
+
+        submission = Submission(question=round_question, game=gs, team=team, status=Submission.Status.PENDING)
+        submission.save()
+        text = TextSubmission(submission=submission, text=ans)
+        text.save()
+
+        events.push_submitted_update()
+        return redirect(request.path)
+    elif request.method == "GET":
+        question = gs.cur_question
+        form = TextboxForm()
+        context = {"question": question, "form": form}
+
+        return render(request, "quiz/textbox.html", context)
     else:
         return HttpResponseNotFound()
 

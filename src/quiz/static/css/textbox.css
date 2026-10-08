@@ -1,0 +1,8 @@
+.textbox {
+    margin: 0;
+    padding: 1vh;
+    border-color: orange;
+    border: 0.5vh solid var(--fg-color-dark);
+}
+
+
