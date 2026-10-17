@@ -19,8 +19,29 @@ class Question(models.Model):
     class Type(models.IntegerChoices):
         MCQ = 1
         TEXTBOX = 2
+        VOTE = 3
+
+    class Marking(models.IntegerChoices):
+        AUTO = 1
+        HOST = 2
+        VOTE = 3
+        NONE = 4
+
+        def from_str(s):
+            match s:
+                case "auto":
+                    return Question.Marking.AUTO
+                case "host":
+                    return Question.Marking.HOST
+                case "vote":
+                    return Question.Marking.VOTE
+                case "none":
+                    return Question.Marking.NONE
+                case _:
+                    return None
 
     question_type = models.IntegerField(choices=Type, default=Type.MCQ)
+    marking_type = models.IntegerField(choices=Marking, default=Marking.NONE)
 
     def __str__(self):
         return self.prompt
@@ -52,12 +73,22 @@ class MultiChoiceQuestion(Question):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.question_type = Question.Type.MCQ
+        self.marking_type = Question.Marking.AUTO
 
 
 class TextboxQuestion(Question):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.question_type = Question.Type.TEXTBOX
+
+
+class VoteQuestion(Question):
+    parent = models.ForeignKey("RoundQuestion", on_delete=models.CASCADE)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.question_type = Question.Type.VOTE
+        self.marking_type = Question.Marking.VOTE
 
 
 class Round(models.Model):

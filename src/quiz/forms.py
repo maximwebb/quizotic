@@ -1,6 +1,8 @@
-from .models import GameState
+from .models import GameState, Team
 
 from django import forms
+from django.utils.html import format_html
+from django.utils.safestring import mark_safe
 
 
 class CreateGameForm(forms.Form):
@@ -52,3 +54,21 @@ class TextboxForm(forms.Form):
         "cols": "20",
         "rows": "4"
     }))
+
+
+class VoteWidget(forms.RadioSelect):
+    option_template_name = "forms/vote_choice.html"
+
+
+class VoteForm(forms.Form):
+    inner = forms.ModelChoiceField
+
+    def __init__(self, teams, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields["inner"] = forms.ModelChoiceField(
+            queryset=teams,
+            empty_label=None,
+            widget=VoteWidget(attrs={"class": "multi-choice"}),
+            label=False,
+        )

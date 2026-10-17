@@ -6,6 +6,8 @@ admin.site.register(GameState)
 admin.site.register(Team)
 admin.site.register(Submission)
 admin.site.register(TextSubmission)
+admin.site.register(RoundQuestion)
+admin.site.register(VoteQuestion)
 
 # Display many-to-many relationships in admin dashboard
 

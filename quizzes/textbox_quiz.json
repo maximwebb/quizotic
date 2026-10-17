@@ -6,7 +6,8 @@
 			"questions": [
 				{
 					"type": "textbox",
-					"prompt": "What is the host's name?"
+					"prompt": "What is the host's name?",
+					"marking": "host"
 				},
 				{
 					"type": "mcq",
