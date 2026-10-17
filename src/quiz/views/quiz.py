@@ -1,4 +1,4 @@
-from . import lobby, question
+from . import lobby, question, scoring
 from .common import get_game_by_code
 from ..models import GameState
 
@@ -13,7 +13,7 @@ def quiz_view(request, game_code: str):
     gs = get_game_by_code(game_code)
     context = {}
 
-    print(f"quizview: {gs}")
+    # TODO: should these pass gs instead of game_code?
     match gs.room:
         case GameState.Room.LOBBY:
             print("Going lobby")
@@ -21,5 +21,8 @@ def quiz_view(request, game_code: str):
         case GameState.Room.QUIZ:
             print("Going quiz")
             return question.question_view(request, game_code)
+        case GameState.Room.SCOREBOARD:
+            print("Going scoreboard")
+            return scoring.scoreboard_view(request, game_code)
         case _:
             return HttpResponseNotFound()

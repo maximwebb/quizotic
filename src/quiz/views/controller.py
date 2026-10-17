@@ -129,10 +129,11 @@ def create_quiz_from_json(raw):
         for q in r["questions"]:
             prompt = q["prompt"]
             marking = Question.Marking.from_str(q["marking"]) if "marking" in q else Question.Marking.NONE
+            points = q["points"] if "points" in q else 0
 
             match q["type"]:
                 case "mcq":
-                    question = MultiChoiceQuestion(prompt=prompt, marking_type=Question.Marking.AUTO)
+                    question = MultiChoiceQuestion(prompt=prompt, marking_type=Question.Marking.AUTO, points=points)
                     question.save()
 
                     ans = q["answer"]
@@ -146,7 +147,10 @@ def create_quiz_from_json(raw):
                         print(f"[R{r_num}|Q{q_num}] MCQ answer \"{ans}\" not included in choices: {','.join(q['choices'])}")
                         return HttpResponseBadRequest()
                 case "textbox":
-                    question = TextboxQuestion(prompt=prompt, marking_type=marking)
+                    question = TextboxQuestion(
+                        prompt=prompt,
+                        marking_type=marking,
+                        points=0 if marking == Question.Marking.VOTE else points)
                     question.save()
 
                 case _:
@@ -158,7 +162,7 @@ def create_quiz_from_json(raw):
             question.save()
 
             if marking == Question.Marking.VOTE:
-                vote = VoteQuestion(prompt="", parent=ord_question, marking_type=Question.Marking.NONE)
+                vote = VoteQuestion(prompt="", parent=ord_question, marking_type=Question.Marking.NONE, points=points)
                 vote_questions.append(vote)
                 vote.save()
 

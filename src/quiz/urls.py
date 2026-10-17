@@ -1,8 +1,8 @@
-from .views import controller, index, teams, question, quiz
+from .views import controller, index, teams, question, quiz, scoring
 
 from django.conf import settings
 from django.conf.urls.static import static
-from django.urls import path, include
+from django.urls import include, path, re_path
 import django_eventstream
 from rest_framework import routers, serializers, viewsets
 
@@ -17,11 +17,12 @@ urlpatterns = [
     path("controller/<str:game_code>", controller.game_view, name="controller_game"),
     path("controller/<str:game_code>/state", controller.game_state_view, name="controller_game_state"),
     path("controller/<str:game_code>/marking", controller.marking_view, name="controller_marking"),
-    path("controller", controller.game_select_view, name="controller_select"),
+    re_path("controller/?", controller.game_select_view, name="controller_select"),
     path("game/<str:game_code>/<str:action>", controller.game_action, name="game_action"),
     path("game/<str:game_code>/room/<str:room>", controller.game_room, name="game_room"),
     path("game/<str:game_code>", controller.game, name="game"),
     path("game", controller.game, name="game_list"),
+    path("scoreboard/<str:game_code>", scoring.scoreboard_view, name="scoreboard"),
     path("canvas", index.canvas_view, name="canvas"),
     path("events/", include(django_eventstream.urls), {"channels": ["events"]}),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

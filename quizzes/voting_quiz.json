@@ -7,12 +7,14 @@
 				{
 					"type": "textbox",
 					"prompt": "Who has the best haircut?",
-					"marking": "vote"
+					"marking": "vote",
+                    "points": 3
 				},
 				{
 					"type": "textbox",
 					"prompt": "What is the deal with France?",
-					"marking": "vote"
+					"marking": "vote",
+                    "points": 100
 				}
 			]
 		}
