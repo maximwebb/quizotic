@@ -8,7 +8,6 @@ from django.http import HttpResponse, HttpResponseNotFound
 
 
 def is_submitted(team, game: GameState):
-    print(game)
     question = game.cur_round_question
     return Submission.objects.filter(team=team, question=question).exists()
 
@@ -39,7 +38,6 @@ def mcq_view(request, game_code: str):
     if request.method == "POST":
         ans = request.POST["choices"]
         choice = Choice.objects.get(pk=ans)
-        print(choice)
         status = Submission.Status.CORRECT if choice.is_correct else Submission.Status.INCORRECT
 
         round_question = gs.cur_round_question
