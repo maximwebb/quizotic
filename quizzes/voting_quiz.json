@@ -12,7 +12,7 @@
 				{
 					"type": "textbox",
 					"prompt": "What is the deal with France?",
-					"marking": "host"
+					"marking": "vote"
 				}
 			]
 		}

@@ -89,11 +89,14 @@ def vote_view(request, game_code: str):
 
     if request.method == "POST":
         ans = request.POST["choices"]
-        choice = Choice.objects.get(pk=ans)
-
+        team_choice = Team.objects.get(pk=ans)
         round_question = gs.cur_round_question
+
         submission = Submission(question=round_question, game=gs, team=team, status=Submission.Status.PENDING)
         submission.save()
+        text = VoteSubmission(submission=submission, team_choice=team_choice)
+        text.save()
+
         events.push_submitted_update()
         return redirect(request.path)
     elif request.method == "GET":
@@ -101,10 +104,9 @@ def vote_view(request, game_code: str):
         parent = question.parent
         submissions = Submission.objects.all().filter(question=parent.id)
         teams = Team.objects.all().filter(game=gs.id)
-        print(teams)
 
         form = VoteForm(teams)
-        context = {"question": question, "form": form}
+        context = {"prompt": parent.question.prompt, "form": form}
 
         return render(request, "quiz/vote.html", context)
     else:

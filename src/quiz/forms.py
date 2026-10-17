@@ -61,12 +61,12 @@ class VoteWidget(forms.RadioSelect):
 
 
 class VoteForm(forms.Form):
-    inner = forms.ModelChoiceField
+    choices = forms.ModelChoiceField
 
     def __init__(self, teams, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields["inner"] = forms.ModelChoiceField(
+        self.fields["choices"] = forms.ModelChoiceField(
             queryset=teams,
             empty_label=None,
             widget=VoteWidget(attrs={"class": "multi-choice"}),

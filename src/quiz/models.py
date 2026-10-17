@@ -161,6 +161,11 @@ class TextSubmission(models.Model):
     text = models.CharField(max_length=256)
 
 
+class VoteSubmission(models.Model):
+    submission = models.ForeignKey(Submission, on_delete=models.CASCADE)
+    team_choice = models.ForeignKey(Team, on_delete=models.CASCADE)
+
+
 class GameState(models.Model):
     created = models.DateTimeField(default=datetime.now, blank=True)
     round_num = models.IntegerField(default=0)
