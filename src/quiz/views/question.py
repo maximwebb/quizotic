@@ -1,6 +1,6 @@
 from .common import get_game_by_code, get_cur_question_by_code, get_cur_team
-from ..models import GameState, Round, QuizRound, Question, RoundQuestion, MultiChoiceQuestion, TextboxQuestion, Choice, Submission, TextSubmission
-from ..forms import MCQForm, TextboxForm
+from ..models import *
+from ..forms import MCQForm, TextboxForm, VoteForm
 from .. import events
 
 from django.shortcuts import render, redirect
@@ -25,6 +25,8 @@ def question_view(request, game_code: str):
             return mcq_view(request, game_code)
         case Question.Type.TEXTBOX:
             return textbox_view(request, game_code)
+        case Question.Type.VOTE:
+            return vote_view(request, game_code)
         case _:
             return HttpResponseNotFound()
 
@@ -36,7 +38,6 @@ def mcq_view(request, game_code: str):
     if request.method == "POST":
         ans = request.POST["choices"]
         choice = Choice.objects.get(pk=ans)
-        print(choice)
         status = Submission.Status.CORRECT if choice.is_correct else Submission.Status.INCORRECT
 
         round_question = gs.cur_round_question
@@ -76,6 +77,36 @@ def textbox_view(request, game_code: str):
         context = {"question": question, "form": form}
 
         return render(request, "quiz/textbox.html", context)
+    else:
+        return HttpResponseNotFound()
+
+
+def vote_view(request, game_code: str):
+    gs = get_game_by_code(game_code)
+    team = get_cur_team(request)
+
+    if request.method == "POST":
+        ans = request.POST["choices"]
+        team_choice = Team.objects.get(pk=ans)
+        round_question = gs.cur_round_question
+
+        submission = Submission(question=round_question, game=gs, team=team, status=Submission.Status.PENDING)
+        submission.save()
+        text = VoteSubmission(submission=submission, team_choice=team_choice)
+        text.save()
+
+        events.push_submitted_update()
+        return redirect(request.path)
+    elif request.method == "GET":
+        question = VoteQuestion.objects.get(pk=gs.cur_question.id)
+        parent = question.parent
+        submissions = Submission.objects.all().filter(question=parent.id)
+        teams = Team.objects.all().filter(game=gs.id)
+
+        form = VoteForm(teams)
+        context = {"prompt": parent.question.prompt, "form": form}
+
+        return render(request, "quiz/vote.html", context)
     else:
         return HttpResponseNotFound()
 

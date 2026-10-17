@@ -1,0 +1,20 @@
+{
+	"name": "Voting Quiz",
+	"rounds": [
+		{
+			"name": "Trivia",
+			"questions": [
+				{
+					"type": "textbox",
+					"prompt": "Who has the best haircut?",
+					"marking": "vote"
+				},
+				{
+					"type": "textbox",
+					"prompt": "What is the deal with France?",
+					"marking": "vote"
+				}
+			]
+		}
+	]
+}

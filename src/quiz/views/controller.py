@@ -116,19 +116,23 @@ def create_quiz_from_json(raw):
     rounds = []
     quiz = Quiz(name=data["name"])
     quiz.save()
-    for r_i, r in enumerate(data["rounds"]):
+    for r_num, r in enumerate(data["rounds"]):
         round = Round(name=r["name"])
         round.save()
 
-        ord_round = QuizRound(quiz=quiz, round=round, order=r_i)
+        ord_round = QuizRound(quiz=quiz, round=round, order=r_num)
         ord_round.save()
 
-        for q_i, q in enumerate(r["questions"]):
+        vote_questions = []
+
+        q_num = 0
+        for q in r["questions"]:
             prompt = q["prompt"]
+            marking = Question.Marking.from_str(q["marking"]) if "marking" in q else Question.Marking.NONE
 
             match q["type"]:
                 case "mcq":
-                    question = MultiChoiceQuestion(prompt=prompt)
+                    question = MultiChoiceQuestion(prompt=prompt, marking_type=Question.Marking.AUTO)
                     question.save()
 
                     ans = q["answer"]
@@ -139,19 +143,33 @@ def create_quiz_from_json(raw):
                         choice = Choice(text=c, question=question, is_correct=is_correct)
                         choice.save()
                     if not exists_correct:
-                        print(f"[R{r_i}|Q{q_i}] MCQ answer \"{ans}\" not included in choices: {','.join(q['choices'])}")
+                        print(f"[R{r_num}|Q{q_num}] MCQ answer \"{ans}\" not included in choices: {','.join(q['choices'])}")
                         return HttpResponseBadRequest()
                 case "textbox":
-                    question = TextboxQuestion(prompt=prompt)
+                    question = TextboxQuestion(prompt=prompt, marking_type=marking)
                     question.save()
+
                 case _:
-                    print(f"[R{r_i}|Q{q_i}] got bad question type: {q['type']}")
+                    print(f"[R{r_num}|Q{q_num}] got bad question type: {q['type']}")
                     return HttpResponseBadRequest()
 
-            ord_question = RoundQuestion(round=round, question=question, order=q_i)
+            ord_question = RoundQuestion(round=round, question=question, order=q_num)
             ord_question.save()
             question.save()
+
+            if marking == Question.Marking.VOTE:
+                vote = VoteQuestion(prompt="", parent=ord_question, marking_type=Question.Marking.NONE)
+                vote_questions.append(vote)
+                vote.save()
+
             round.questions.add(question)
+            q_num += 1
+
+        for i, vote in enumerate(vote_questions):
+            ord_vote = RoundQuestion(round=round, question=vote, order=q_num)
+            ord_vote.save()
+            round.questions.add(vote)
+            q_num += 1
 
         round.save()
         ord_round.save()
