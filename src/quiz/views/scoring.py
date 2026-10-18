@@ -51,7 +51,11 @@ def get_round_score(team, round, game) -> int:
                 except BaseException:
                     print(f"No vote found for question: {question}, team: {team} skipping...")
                     continue
-                res += vote_count * question.points
+                if VoteSubmission.objects.all().filter(submission=sub, team_choice=team).count() > 0:
+                    print(f"Team {team} voted for themselves - for shame!")
+                    res -= 1
+                else:
+                    res += vote_count * question.points
             case _:
                 raise f"Scoring not supported, {question}"
 
