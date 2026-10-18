@@ -8,3 +8,22 @@
 #scoreboard-subtitle {
     font-size: 3vh;
 }
+
+#scoreboard-table {
+    border: 0.7vh solid var(--acc-color);
+    font-size: 2vh;
+}
+
+#scoreboard-table th {
+    font-weight: bold;
+    padding: 1.5vh;
+    background-color: var(--fg-color-lighter);
+}
+
+#scoreboard-table tr {
+}
+
+#scoreboard-table td {
+    padding: 1.5vh;
+    background-color: var(--fg-color-light);
+}

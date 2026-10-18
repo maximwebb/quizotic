@@ -12,8 +12,9 @@
         <p id="scoreboard-title" class="title-2"> ⚡Scoreboard⚡</p>
         <p id="scoreboard-subtitle" class="subtitle">Round {{ game.round_num|add:"1" }}</p>
         <table id="scoreboard-table">
+            <tr><th>Team</th><th>Round pts</th><th>Total pts</th></tr>
             {% for row in data %}
-            <tr><td>{{row.team}}</td><td>{{row.score}}</td></tr>
+            <tr><td>{{row.team.team_name}}</td><td>{{row.round_score}}</td><td>{{row.total_score}}</td></tr>
             {% endfor %}
         </table>
     </div>

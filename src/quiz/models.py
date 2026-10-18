@@ -183,8 +183,12 @@ class GameState(models.Model):
     code = models.CharField(max_length=6)
 
     @property
+    def cur_quiz_round(self):
+        return QuizRound.objects.get(quiz=self.quiz, order=self.round_num)
+    
+    @property
     def cur_round(self):
-        return QuizRound.objects.get(quiz=self.quiz, order=self.round_num).round
+        return self.cur_quiz_round.round
 
     @property
     def cur_round_question(self):

@@ -10,8 +10,9 @@ def scoreboard_view(request, game_code: str):
     game = get_game_by_code(game_code)
 
     teams = Team.objects.all().filter(game=game)
+    cur_round = game.cur_round
 
-    data = [{"team": team, "score": get_total_score(team, game)} for team in teams]
+    data = [{"team": team, "round_score": get_round_score(team, cur_round, game), "total_score": get_total_score(team, game)} for team in teams]
 
     context = {"game": game, "data": data}
     return render(request, "scoreboard.html", context)
