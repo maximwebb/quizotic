@@ -1,0 +1,40 @@
+{% load static %}
+<!doctype html>
+<html>
+<head>
+    <script src="{% static 'js/sse.js' %}"> </script>
+    <link rel="stylesheet" href="{% static 'css/common.css' %}"></link>
+    <link rel="stylesheet" href="{% static 'css/lobby.css' %}"></link>
+</head>
+
+<body class="std-body var-height">
+    <div class="content shimmer">
+        <p id="welcome-title" class="title-2">Game Code: {{game_code}}</p>
+	    <div id="team-list"></div>
+    </div>
+</body>
+
+<script>
+sse.addEventListener("update", async (e) => {
+	let ev = JSON.parse(e.data);
+	if (ev.type == "teams") {
+		await refreshTeamsList();
+	}
+	else {
+		console.log(`Got unrecognised event type: ${ev.type}`);
+	}
+});
+
+
+const refreshTeamsList = async () => {
+    const res = await fetch("/teams/list/{{game_code}}");
+	const html = await res.text();
+
+	document.querySelector("#team-list").innerHTML = html;
+};
+
+refreshTeamsList();
+
+</script>
+</html>
+
