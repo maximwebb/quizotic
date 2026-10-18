@@ -1,0 +1,23 @@
+{% load static %}
+<!doctype html>
+<html>
+<head>
+    <script src="{% static 'js/sse.js' %}"> </script>
+    <link rel="stylesheet" href="{% static 'css/common.css' %}"></link>
+    <link rel="stylesheet" href="{% static 'css/scoreboard.css' %}"></link>
+</head>
+
+<body class="std-body var-height">
+    <div class="content shimmer">
+        <p id="scoreboard-title" class="title-2"> ⚡Scoreboard⚡</p>
+        <p id="scoreboard-subtitle" class="subtitle">Round {{ game.round_num|add:"1" }}</p>
+        <table id="scoreboard-table">
+            <tr><th>Team</th><th>Round pts</th><th>Total pts</th></tr>
+            {% for row in data %}
+            <tr><td>{{row.team.team_name}}</td><td>{{row.round_score}}</td><td>{{row.total_score}}</td></tr>
+            {% endfor %}
+        </table>
+    </div>
+</body>
+</html>
+

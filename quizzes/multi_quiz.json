@@ -1,0 +1,75 @@
+{
+	"name": "Multi Quiz",
+	"rounds": [
+		{
+			"name": "multi choice",
+			"questions": [
+				{
+					"type": "mcq",
+					"prompt": "What is the capital of Australia?",
+					"choices": [
+						"Sydney",
+						"Melbourne",
+						"Canberra",
+						"Perth",
+                        "Madrid",
+                        "Lima"
+					],
+					"answer": "Canberra",
+                    "points": 1
+				},
+				{
+					"type": "mcq",
+					"prompt": "Who is the president of France?",
+					"choices": [
+						"Emmanuel Macron",
+						"Franz Kafka",
+						"John Cleese"
+					],
+					"answer": "Emmanuel Macron",
+                    "points": 4
+				},
+				{
+					"type": "mcq",
+					"prompt": "Which of these is not a state of matter?",
+					"choices": [
+						"Gas",
+						"Liquid",
+						"Marmite",
+						"Solid"
+					],
+					"answer": "Marmite",
+                    "points": 8
+				}
+			]
+		},
+		{
+			"name": "Written",
+			"questions": [
+				{
+					"type": "textbox",
+					"prompt": "Who has the best haircut?",
+					"marking": "host",
+                    "points": 50
+				},
+				{
+					"type": "textbox",
+					"prompt": "What is the deal with France?",
+					"marking": "host",
+                    "points": 30
+				}
+			]
+		},
+		{
+			"name": "Election day",
+			"questions": [
+				{
+					"type": "textbox",
+					"prompt": "Write some stuff!",
+					"marking": "vote",
+                    "points": 1000
+				}
+			]
+		}
+	]
+}

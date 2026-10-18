@@ -15,6 +15,7 @@ class Team(models.Model):
 # Base class for question
 class Question(models.Model):
     prompt = models.CharField(max_length=256)
+    points = models.IntegerField(default=0)
 
     class Type(models.IntegerChoices):
         MCQ = 1
@@ -142,7 +143,6 @@ class Submission(models.Model):
         INCORRECT = 3, "incorrect"
 
     status = models.IntegerField(choices=Status, default=Status.PENDING)
-    points = models.IntegerField(default=0)
 
     @property
     def question_num(self):
@@ -174,16 +174,21 @@ class GameState(models.Model):
     class Room(models.IntegerChoices):
         LOBBY = 1, "Lobby"
         QUIZ = 2, "Quiz"
-        ROUND_END = 3, "Round End"
-        GAME_END = 4, "Game End"
+        ROUND_START = 3, "Round start"
+        SCOREBOARD = 4, "Scoreboard"
+        GAME_END = 5, "Game End"
 
     room = models.IntegerField(choices=Room, default=Room.LOBBY)
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
     code = models.CharField(max_length=6)
 
     @property
+    def cur_quiz_round(self):
+        return QuizRound.objects.get(quiz=self.quiz, order=self.round_num)
+    
+    @property
     def cur_round(self):
-        return QuizRound.objects.get(quiz=self.quiz, order=self.round_num).round
+        return self.cur_quiz_round.round
 
     @property
     def cur_round_question(self):
