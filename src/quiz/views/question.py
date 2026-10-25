@@ -31,11 +31,11 @@ def question_view(request, game_code: str):
             return HttpResponseNotFound()
 
 
-def mcq_view(request, game_code: str):
+def mcq_view(request, game_code: str, is_presenter=False):
     gs = get_game_by_code(game_code)
-    team = get_cur_team(request)
 
     if request.method == "POST":
+        team = get_cur_team(request)
         ans = request.POST["choices"]
         choice = Choice.objects.get(pk=ans)
         status = Submission.Status.CORRECT if choice.is_correct else Submission.Status.INCORRECT
@@ -49,18 +49,19 @@ def mcq_view(request, game_code: str):
         question = gs.cur_question
         choices = Choice.objects.all().filter(question=question.id)
         form = MCQForm(choices)
-        context = {"question": question, "form": form}
+        context = {"question": question, "form": form, "is_presenter": is_presenter}
+        print(context)
 
         return render(request, "quiz/mcq.html", context)
     else:
         return HttpResponseNotFound()
 
 
-def textbox_view(request, game_code: str):
+def textbox_view(request, game_code: str, is_presenter=False):
     gs = get_game_by_code(game_code)
-    team = get_cur_team(request)
 
     if request.method == "POST":
+        team = get_cur_team(request)
         ans = request.POST["text"]
         round_question = gs.cur_round_question
 
@@ -74,18 +75,18 @@ def textbox_view(request, game_code: str):
     elif request.method == "GET":
         question = gs.cur_question
         form = TextboxForm()
-        context = {"question": question, "form": form}
+        context = {"question": question, "form": form, "is_presenter": is_presenter}
 
         return render(request, "quiz/textbox.html", context)
     else:
         return HttpResponseNotFound()
 
 
-def vote_view(request, game_code: str):
+def vote_view(request, game_code: str, is_presenter=False):
     gs = get_game_by_code(game_code)
-    team = get_cur_team(request)
 
     if request.method == "POST":
+        team = get_cur_team(request)
         ans = request.POST["choices"]
         team_choice = Team.objects.get(pk=ans)
         round_question = gs.cur_round_question
@@ -104,7 +105,7 @@ def vote_view(request, game_code: str):
         teams = Team.objects.all().filter(game=gs.id)
 
         form = VoteForm(teams)
-        context = {"prompt": parent.question.prompt, "form": form}
+        context = {"prompt": parent.question.prompt, "form": form, "is_presenter": is_presenter}
 
         return render(request, "quiz/vote.html", context)
     else:

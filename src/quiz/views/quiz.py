@@ -16,13 +16,10 @@ def quiz_view(request, game_code: str):
     # TODO: should these pass gs instead of game_code?
     match gs.room:
         case GameState.Room.LOBBY:
-            print("Going lobby")
             return lobby.lobby_view(request, game_code)
         case GameState.Room.QUIZ:
-            print("Going quiz")
             return question.question_view(request, game_code)
         case GameState.Room.SCOREBOARD:
-            print("Going scoreboard")
             return scoring.scoreboard_view(request, game_code)
         case _:
             return HttpResponseNotFound()
