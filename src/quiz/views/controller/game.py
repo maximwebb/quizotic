@@ -9,6 +9,19 @@ from django.core import serializers
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound, HttpResponseBadRequest, JsonResponse
 from django.urls import reverse
 
+from dataclasses import dataclass
+
+
+@dataclass
+class GamePos:
+    """ Represents the current room/round/question """
+    room: GameState.Room
+    round: int
+    question: int
+
+    def start():
+        return GamePos(room=GameState.Room.LOBBY, round=0, question=0)
+
 
 def index(request, game_code: str):
     if request.method == "GET":
@@ -24,31 +37,23 @@ def state(request, game_code: str):
         return render(request, "controller/game_state.html", context)
 
 
+# Lobby -> Round Start -> Q1 -> ... -> QN -> Scoreboard -> Game End
+#               ^--------------------------------|
 def action(request, game_code: str, action: str):
     game = get_game_by_code(game_code)
     if request.method == "POST":
-        if action == "next-question":
-            if game.question_num >= len(game.cur_round) - 1:
-                if game.round_num < len(game.quiz) - 1:
-                    game.question_num = 0
-                    game.round_num += 1
-                    print("Changing to round {game.round_num}")
-                else:
-                    print("Reached end of quiz")
-            else:
-                game.question_num += 1
-        elif action == "prev-question":
-            if game.question_num == 0:
-                if game.round_num > 0:
-                    game.round_num -= 1
-                    game.question_num = len(game.cur_round) - 1
-                    print("Changing to round {game.round_num}")
-                else:
-                    print("Reached start of quiz")
-            else:
-                game.question_num -= 1
+        if action == "next":
+            game_pos = next_game_pos(game)
+        elif action == "prev":
+            game_pos = prev_game_pos(game)
+        elif action == "reset":
+            game_pos = GamePos.start()
         else:
             return HttpResponseNotFound()
+
+        game.room = game_pos.room
+        game.round_num = game_pos.round
+        game.question_num = game_pos.question
 
         events.push_question_change()
 
@@ -59,23 +64,47 @@ def action(request, game_code: str, action: str):
     return HttpResponseNotFound()
 
 
-def room(request, game_code: str, room: str = None):
-    game = get_game_by_code(game_code)
-    prev_room = GameState.Room(game.room)
-    if request.method == "POST":
-        if room == "lobby":
-            game.room = GameState.Room.LOBBY
-        elif room == "quiz":
-            game.room = GameState.Room.QUIZ
-        elif room == "round-end":
-            game.room = GameState.Room.ROUND_END
-        elif room == "game-end":
-            game.room = GameState.Room.GAME_END
-        else:
-            return HttpResponseNotFound()
-        game.save()
-        serializer = GameStateSerializer(game)
-        events.push_room_change()
-        return JsonResponse(serializer.data)
+def next_game_pos(game) -> GamePos:
+    room, round, question = game.room, game.round_num, game.question_num
+    match room:
+        case GameState.Room.LOBBY:
+            return GamePos(GameState.Room.ROUND_START, round, question)
+        case GameState.Room.ROUND_START:
+            return GamePos(GameState.Room.QUIZ, round, question)
+        case GameState.Room.QUIZ:
+            if game.question_num >= len(game.cur_round) - 1:
+                return GamePos(GameState.Room.SCOREBOARD, round, question)
+            return GamePos(GameState.Room.SCOREBOARD, round, question + 1)
+        case GameState.Room.SCOREBOARD:
+            if game.round_num >= len(game.quiz) - 1:
+                return GamePos(GameState.Room.GAME_END, round, question)
+            return GamePos(GameState.Room.ROUND_START, round + 1, 0)
+        case GameState.Room.GAME_END:
+            print("Finished game")
+            return GamePos(GameState.Room.GAME_END, round, question)
+        case _:
+            print("Invalid state transition")
+            return None
 
-    return HttpResponseNotFound()
+
+def prev_game_pos(game) -> GamePos:
+    room, round, question = game.room, game.round_num, game.question_num
+    match room:
+        case GameState.Room.LOBBY:
+            print("Already at start of game")
+            return GamePos(room, round, question)
+        case GameState.Room.ROUND_START:
+            if game.round_num == 0:
+                return GamePos(GameState.Room.LOBBY, round, question)
+            return GamePos(GameState.Room.SCOREBOARD, round - 1, len(game.prev_round) - 1)
+        case GameState.Room.QUIZ:
+            if game.question_num == 0:
+                return GamePos(GameState.Room.ROUND_START, round, question)
+            return GamePos(GameState.Room.QUIZ, round, question - 1)
+        case GameState.Room.SCOREBOARD:
+            return GamePos(GameState.Room.QUIZ, round, question)
+        case GameState.Room.GAME_END:
+            return GamePos(GameState.Room.SCOREBOARD, round, question)
+        case _:
+            print("Invalid state transition")
+            return None

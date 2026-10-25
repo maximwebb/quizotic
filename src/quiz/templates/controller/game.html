@@ -9,14 +9,9 @@
 		{% include "../teams/list.html" %}
 	</div>
 	
-	<div id = "question-controls">
-		<button onclick="nextQuestion()">Next Question</button>
-		<button onclick="prevQuestion()">Prev Question</button>
-	</div>
-
-	<div id = "game-controls">
-		<button onclick="setRoom('lobby')">Goto Lobby</button>
-		<button onclick="setRoom('quiz')">Goto Quiz</button>
+	<div id = "navigation">
+		<button onclick="next()">Next Question</button>
+		<button onclick="prev()">Prev Question</button>
 	</div>
 	{% csrf_token %}
 </body>
@@ -52,28 +47,29 @@ setInterval(refreshTeamList, 5000);
 refreshTeamList();
 refreshGameState();
 
-const nextQuestion = async () => {
-	const resp = await fetch_with_csrf("{% url 'game_action' game.code 'next-question' %}", {
+const next = async () => {
+	const resp = await fetch_with_csrf("{% url 'game_action' game.code 'next' %}", {
 		method: "POST",
 	});
 
 	refreshGameState();
 }
 
-const prevQuestion = async () => {
-	const resp = await fetch_with_csrf("{% url 'game_action' game.code 'prev-question' %}", {
+const prev = async () => {
+	const resp = await fetch_with_csrf("{% url 'game_action' game.code 'prev' %}", {
 		method: "POST",
 	});
 
 	refreshGameState();
 }
 
-const setRoom = async (room) => {
-	const resp = await fetch_with_csrf("/game/{{game.code}}/room/" + room, {
+const reset = async () => {
+	const resp = await fetch_with_csrf("{% url 'game_action' game.code 'reset' %}", {
 		method: "POST",
 	});
 
 	refreshGameState();
 }
+
 </script>
 <html>
