@@ -1,0 +1,55 @@
+{% load static %}
+<!doctype html>
+<html>
+<head>
+    <script src="{% static 'js/sse.js' %}"> </script>
+    <link rel="stylesheet" href="{% static 'css/common.css' %}"></link>
+    <link rel="stylesheet" href="{% static 'css/team_list.css' %}"></link>
+</head>
+<style>
+#pics {
+    display: flex;
+    flex-direction: row;
+}
+
+.profile-pic {
+    width: 15vh;
+    height: 15vh;
+}
+</style>
+
+<body class="wide-body fixed-height">
+    <div class="content shimmer">
+        <p id="welcome-title" class="title">CONGRATULATIONS TEAM {{team.team_name}}!</p>
+        <div id="pics">
+            <img class="profile-pic cartoon-shadow-small" src="{% get_media_prefix %}{{team.profile_pic}}" />
+            <img class="profile-pic cartoon-shadow-small" src="{% get_media_prefix %}{{team.profile_pic}}" />
+            <img class="profile-pic cartoon-shadow-small" src="{% get_media_prefix %}{{team.profile_pic}}" />
+        </div>
+    </div>
+</body>
+
+<script>
+sse.addEventListener("update", async (e) => {
+	let ev = JSON.parse(e.data);
+	if (ev.type == "teams") {
+		await refreshTeamsList();
+	}
+	else {
+		console.log(`Got unrecognised event type: ${ev.type}`);
+	}
+});
+
+
+const refreshTeamsList = async () => {
+    const res = await fetch("/teams/list/{{game_code}}");
+	const html = await res.text();
+
+	document.querySelector("#team-list").innerHTML = html;
+};
+
+refreshTeamsList();
+
+</script>
+</html>
+

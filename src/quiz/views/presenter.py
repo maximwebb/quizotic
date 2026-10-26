@@ -17,6 +17,8 @@ def presenter_view(request, game_code: str):
             return presenter_quiz(request, game)
         case GameState.Room.SCOREBOARD:
             return presenter_scoreboard(request, game)
+        case GameState.Room.GAME_END:
+            return presenter_game_end(request, game)
         case _:
             return HttpResponseNotFound()
 
@@ -48,3 +50,9 @@ def presenter_quiz(request, game):
 
 def presenter_scoreboard(request, game):
     return scoring.scoreboard_view(request, game.code, is_presenter=True)
+
+def presenter_game_end(request, game):
+    winner = scoring.get_winning_team(game)
+    context = {"game": game, "team": winner}
+
+    return render(request, "presenter/game_end.html", context)

@@ -61,3 +61,16 @@ def get_round_score(team, round, game) -> int:
                 raise f"Scoring not supported, {question}"
 
     return res
+
+
+def get_winning_team(game):
+    top_score, top_team = 0, None
+    for team in Team.objects.all().filter(game=game):
+        score = get_total_score(team, game) 
+        if score > top_score:
+            top_score = score
+            top_team = team
+            print(f"{top_score}, {top_team}")
+    return top_team
+
+
