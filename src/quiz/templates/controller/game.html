@@ -10,8 +10,9 @@
 	</div>
 	
 	<div id = "navigation">
-		<button onclick="next()">Next Question</button>
-		<button onclick="prev()">Prev Question</button>
+		<button onclick="next()" id="next-btn">Next</button>
+		<button onclick="prev()" id="prev-btn">Prev</button>
+		<button onclick="reset()" id="reset-btn">Reset</button>
 	</div>
 	{% csrf_token %}
 </body>
@@ -31,9 +32,14 @@ const fetch_with_csrf = async (endpoint, fields={}) => {
 }
 
 const refreshGameState = async () => {
-	const resp = await fetch_with_csrf("{% url 'controller_game_state' game.code %}").then(r => r.text());
+	const gameState = await fetch_with_csrf("{% url 'controller_game_state' game.code %}").then(r => r.text());
+    const gamePos = await fetch_with_csrf("{% url 'controller_game_position' game.code %}").then(r => r.json());
+    console.log(gamePos);
+    console.log(gamePos["next"]);
 	
-	document.querySelector("#game-state").innerHTML = resp;
+	document.querySelector("#game-state").innerHTML = gameState;
+    document.querySelector("#next-btn").innerHTML = `⬅️ ${gamePos["next"]}`;
+    document.querySelector("#prev-btn").innerHTML = `${gamePos["prev"]} ➡️`;
 }
 
 const refreshTeamList = async () => {

@@ -9,7 +9,7 @@ from django.core import serializers
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound, HttpResponseBadRequest, JsonResponse
 from django.urls import reverse
 
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 
 
 @dataclass
@@ -21,6 +21,9 @@ class GamePos:
 
     def start():
         return GamePos(room=GameState.Room.LOBBY, round=0, question=0)
+
+    def __str__(self):
+        return f"{self.room.label} | Round {self.round} | Q{self.question}"
 
 
 def index(request, game_code: str):
@@ -35,6 +38,17 @@ def state(request, game_code: str):
         game = get_game_by_code(game_code)
         context = {"game": game}
         return render(request, "controller/game_state.html", context)
+
+
+def position(request, game_code: str):
+    if request.method == "GET":
+        game = get_game_by_code(game_code)
+        nxt = next_game_pos(game)
+        prev = prev_game_pos(game)
+        print(nxt)
+        print(prev)
+        data = {"next": str(nxt), "prev": str(prev)}
+        return JsonResponse(data)
 
 
 # Lobby -> Round Start -> Q1 -> ... -> QN -> Scoreboard -> Game End

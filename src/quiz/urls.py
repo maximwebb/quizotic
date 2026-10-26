@@ -16,6 +16,7 @@ urlpatterns = [
     path("controller/create", controller.create.create, name="create_game"),
     path("controller/<str:game_code>", controller.game.index, name="controller_game"),
     path("controller/<str:game_code>/state", controller.game.state, name="controller_game_state"),
+    path("controller/<str:game_code>/position", controller.game.position, name="controller_game_position"),
     path("controller/<str:game_code>/marking", controller.marking.index, name="controller_marking"),
     re_path("controller/?", controller.create.index, name="controller_select"),
     path("game/<str:game_code>/<str:action>", controller.game.action, name="game_action"),
