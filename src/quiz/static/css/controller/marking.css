@@ -1,0 +1,41 @@
+#title {
+    font-size: 4vh;
+}
+
+#submission-list {
+    width: 100%;
+    margin-top: 1vh;
+}
+
+.submission {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--fg-color-light);
+    font-size: 2vh;
+    .buttons {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+    }
+}
+
+.mark-btn {
+    border: none;
+    padding: 1vh;
+    font-size: 2vh;
+    margin: 1vh 0.5vh;
+    width: 40%;
+    cursor: pointer;
+}
+
+.mark-btn:hover {
+    opacity: 0.7;
+}
+
+.correct-btn {
+    background-color: var(--green);
+}
+
+.incorrect-btn {
+    background-color: var(--red);
+}

@@ -1,4 +1,5 @@
 from ..common import get_game_by_code
+from ..util import parse_bool
 from ...models import *
 
 from django.shortcuts import render

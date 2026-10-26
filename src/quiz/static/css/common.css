@@ -88,6 +88,12 @@
     text-align: center;
 }
 
+.title-4 {
+    font-size: 2vh;
+    font-weight: 600;
+    text-align: center;
+}
+
 .std-text {
     color: var(--off-black);
     font-size: 2vh;
@@ -175,6 +181,10 @@
     cursor: pointer;
     position: relative;
     user-select: none;
+}
+
+.btn-small:hover {
+    background-color: var(--btn-color-hover);
 }
 
 .std-input {

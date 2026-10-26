@@ -1,5 +1,4 @@
 from ..common import get_game_by_code
-from ..util import parse_bool
 from ... import events
 from ...models import *
 from ...serializers import GameStateSerializer
@@ -45,9 +44,7 @@ def position(request, game_code: str):
         game = get_game_by_code(game_code)
         nxt = next_game_pos(game)
         prev = prev_game_pos(game)
-        print(nxt)
-        print(prev)
-        data = {"next": str(nxt), "prev": str(prev)}
+        data = {"next": str(nxt or "n/a"), "prev": str(prev or "n/a")}
         return JsonResponse(data)
 
 
@@ -106,7 +103,7 @@ def prev_game_pos(game) -> GamePos:
     match room:
         case GameState.Room.LOBBY:
             print("Already at start of game")
-            return GamePos(room, round, question)
+            return GamePos(GameState.Room.LOBBY, round, question)
         case GameState.Room.ROUND_START:
             if game.round_num == 0:
                 return GamePos(GameState.Room.LOBBY, round, question)

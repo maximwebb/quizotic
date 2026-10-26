@@ -1,20 +1,30 @@
+{% load static %}
 <!doctype html>
 <html>
-<body>
-    <h1>Game Control Panel {{ game.code }}</h1>
-	<div id = "game-state">
+<head>
+    <script src="{% static 'js/sse.js' %}"> </script>
+    <link rel="stylesheet" href="{% static 'css/common.css' %}"></link>
+    <link rel="stylesheet" href="{% static 'css/controller/index.css' %}"></link>
+</head>
+<body class="std-body var-height">
+    <div class="content">
+    <p class="title-3">Game Control Panel {{ game.code }}</p>
+	
+	<div id = "nav">
+	    <div id = "game-state">
+	    </div>
+        <div id="nav-inner">
+		    <button onclick="prev()" id="prev-btn" class="btn">Prev</button>
+		    <button onclick="next()" id="next-btn" class="btn">Next</button>
+        </div>
+		<button onclick="reset()" id="reset-btn" class="btn-small">Reset</button>
 	</div>
-    <a href="{% url 'controller_marking' game.code %}">Mark submissions</a>
+    <a id="marking-btn" class="btn-small" href="{% url 'controller_marking' game.code %}">Mark submissions</a>
 	<div id = "team-list">
 		{% include "../teams/list.html" %}
 	</div>
-	
-	<div id = "navigation">
-		<button onclick="next()" id="next-btn">Next</button>
-		<button onclick="prev()" id="prev-btn">Prev</button>
-		<button onclick="reset()" id="reset-btn">Reset</button>
-	</div>
 	{% csrf_token %}
+    </div>
 </body>
 
 <script>
@@ -38,8 +48,8 @@ const refreshGameState = async () => {
     console.log(gamePos["next"]);
 	
 	document.querySelector("#game-state").innerHTML = gameState;
-    document.querySelector("#next-btn").innerHTML = `⬅️ ${gamePos["next"]}`;
-    document.querySelector("#prev-btn").innerHTML = `${gamePos["prev"]} ➡️`;
+    document.querySelector("#next-btn").innerHTML = `${gamePos["next"]} ➡️`;
+    document.querySelector("#prev-btn").innerHTML = `⬅️ ${gamePos["prev"]}`;
 }
 
 const refreshTeamList = async () => {
