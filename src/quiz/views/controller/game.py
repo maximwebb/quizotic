@@ -85,7 +85,7 @@ def next_game_pos(game) -> GamePos:
         case GameState.Room.QUIZ:
             if game.question_num >= len(game.cur_round) - 1:
                 return GamePos(GameState.Room.SCOREBOARD, round, question)
-            return GamePos(GameState.Room.SCOREBOARD, round, question + 1)
+            return GamePos(GameState.Room.QUIZ, round, question + 1)
         case GameState.Room.SCOREBOARD:
             if game.round_num >= len(game.quiz) - 1:
                 return GamePos(GameState.Room.GAME_END, round, question)

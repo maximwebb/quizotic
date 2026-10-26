@@ -22,4 +22,4 @@ def quiz_view(request, game_code: str):
         case GameState.Room.SCOREBOARD:
             return scoring.scoreboard_view(request, game_code)
         case _:
-            return HttpResponseNotFound()
+            return scoring.scoreboard_view(request, game_code)

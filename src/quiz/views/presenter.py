@@ -11,8 +11,12 @@ def presenter_view(request, game_code: str):
     match game.room:
         case GameState.Room.LOBBY:
             return presenter_lobby(request, game)
+        case GameState.Room.ROUND_START:
+            return presenter_round_start(request, game)
         case GameState.Room.QUIZ:
             return presenter_quiz(request, game)
+        case GameState.Room.SCOREBOARD:
+            return presenter_scoreboard(request, game)
         case _:
             return HttpResponseNotFound()
 
@@ -21,6 +25,12 @@ def presenter_lobby(request, game):
     context = {"game_code": game.code, "game": game}
 
     return render(request, "presenter/lobby.html", context)
+
+
+def presenter_round_start(request, game):
+    context = {"game": game, "round_name": game.cur_round.name}
+
+    return render(request, "presenter/round_start.html", context)
 
 
 def presenter_quiz(request, game):
@@ -34,3 +44,7 @@ def presenter_quiz(request, game):
             return question.vote_view(request, game.code, is_presenter=True)
         case _:
             return HttpResponseNotFound()
+
+
+def presenter_scoreboard(request, game):
+    return scoring.scoreboard_view(request, game.code, is_presenter=True)
