@@ -1,4 +1,4 @@
-from .views import controller, index, teams, question, quiz, scoring
+from .views import controller, index, teams, presenter, question, quiz, scoring
 
 from django.conf import settings
 from django.conf.urls.static import static
@@ -13,16 +13,15 @@ urlpatterns = [
     path("teams/submitted/<str:game_code>", teams.submitted, name="team_submitted"),
     path("teams/profile/<str:game_code>", teams.profile, name="team_profile"),
     path("quiz/<str:game_code>", quiz.quiz_view, name="quiz"),
-    path("controller/create", controller.create_game, name="create_game"),
-    path("controller/<str:game_code>", controller.game_view, name="controller_game"),
-    path("controller/<str:game_code>/state", controller.game_state_view, name="controller_game_state"),
-    path("controller/<str:game_code>/marking", controller.marking_view, name="controller_marking"),
-    re_path("controller/?", controller.game_select_view, name="controller_select"),
-    path("game/<str:game_code>/<str:action>", controller.game_action, name="game_action"),
-    path("game/<str:game_code>/room/<str:room>", controller.game_room, name="game_room"),
-    path("game/<str:game_code>", controller.game, name="game"),
-    path("game", controller.game, name="game_list"),
+    path("controller/create", controller.create.create, name="create_game"),
+    path("controller/<str:game_code>", controller.game.index, name="controller_game"),
+    path("controller/<str:game_code>/state", controller.game.state, name="controller_game_state"),
+    path("controller/<str:game_code>/position", controller.game.position, name="controller_game_position"),
+    path("controller/<str:game_code>/marking", controller.marking.index, name="controller_marking"),
+    re_path("controller/?", controller.create.index, name="controller_select"),
+    path("game/<str:game_code>/<str:action>", controller.game.action, name="game_action"),
     path("scoreboard/<str:game_code>", scoring.scoreboard_view, name="scoreboard"),
+    path("presenter/<str:game_code>", presenter.presenter_view, name="presenter"),
     path("canvas", index.canvas_view, name="canvas"),
     path("events/", include(django_eventstream.urls), {"channels": ["events"]}),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

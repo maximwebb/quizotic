@@ -185,10 +185,18 @@ class GameState(models.Model):
     @property
     def cur_quiz_round(self):
         return QuizRound.objects.get(quiz=self.quiz, order=self.round_num)
-    
+
+    @property
+    def prev_quiz_round(self):
+        return QuizRound.objects.get(quiz=self.quiz, order=self.round_num - 1)
+
     @property
     def cur_round(self):
         return self.cur_quiz_round.round
+
+    @property
+    def prev_round(self):
+        return self.prev_quiz_round.round
 
     @property
     def cur_round_question(self):

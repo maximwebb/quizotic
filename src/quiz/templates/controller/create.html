@@ -1,24 +1,45 @@
 {% load static %}
 <!doctype html>
 <html>
-    <body>
-        <h1>Create Game</h1>
+<head>
+    <link rel="stylesheet" href="{% static 'css/common.css' %}"></link>
+<style>
+body {
+    font-size: 2vh;
+}
 
-        <h4>Upload new quiz</h4>
-	    <form action="" method="post" enctype="multipart/form-data">
-	    	{% csrf_token %}
-	    	{{ form }}
-	    	<input type="submit" value="Create" class="btn cartoon-shadow"></input>
-	    </form>
+input {
+    font-size: 1vh;
+}
 
-        <h4>or select from existing:</h4>
-        <ul>
-        {% for quiz in quiz_list %}
-        <form action="" method="post">
-            {% csrf_token %}
-            <li><button type="submit" name="quiz_id" value="{{quiz.id}}">{{ quiz.name }}</button></li>
-        </form>
-        {% endfor %}
-        </ul>
+#select {
+    list-style-type: none;
+    li {
+        margin: 1vh 0;
+    }
+}
+</style>
+</head>
+    <body class="std-body fixed-height">
+        <div class="content">
+            <p class="title-3">Create Game</p>
+
+            <p class="title-4">Upload new quiz</p>
+	        <form action="" method="post" enctype="multipart/form-data">
+	        	{% csrf_token %}
+	        	{{ form }}
+	        	<input type="submit" value="Create" class="btn cartoon-shadow"></input>
+	        </form>
+
+            <h4>or select from existing:</h4>
+            <ul id="select">
+            {% for quiz in quiz_list %}
+            <form action="" method="post">
+                {% csrf_token %}
+                <li><button class="btn-small" type="submit" name="quiz_id" value="{{quiz.id}}">{{ quiz.name }} | {{ quiz.created }} </button></li>
+            </form>
+            {% endfor %}
+            </ul>
+        </div>
     </body>
 </html>

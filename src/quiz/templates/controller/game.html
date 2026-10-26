@@ -1,24 +1,30 @@
+{% load static %}
 <!doctype html>
 <html>
-<body>
-    <h1>Game Control Panel {{ game.code }}</h1>
-	<div id = "game-state">
+<head>
+    <script src="{% static 'js/sse.js' %}"> </script>
+    <link rel="stylesheet" href="{% static 'css/common.css' %}"></link>
+    <link rel="stylesheet" href="{% static 'css/controller/index.css' %}"></link>
+</head>
+<body class="std-body var-height">
+    <div class="content">
+    <p class="title-3">Game Control Panel {{ game.code }}</p>
+	
+	<div id = "nav">
+	    <div id = "game-state">
+	    </div>
+        <div id="nav-inner">
+		    <button onclick="prev()" id="prev-btn" class="btn">Prev</button>
+		    <button onclick="next()" id="next-btn" class="btn">Next</button>
+        </div>
+		<button onclick="reset()" id="reset-btn" class="btn-small">Reset</button>
 	</div>
-    <a href="{% url 'controller_marking' game.code %}">Mark submissions</a>
+    <a id="marking-btn" class="btn-small" href="{% url 'controller_marking' game.code %}">Mark submissions</a>
 	<div id = "team-list">
 		{% include "../teams/list.html" %}
 	</div>
-	
-	<div id = "question-controls">
-		<button onclick="nextQuestion()">Next Question</button>
-		<button onclick="prevQuestion()">Prev Question</button>
-	</div>
-
-	<div id = "game-controls">
-		<button onclick="setRoom('lobby')">Goto Lobby</button>
-		<button onclick="setRoom('quiz')">Goto Quiz</button>
-	</div>
 	{% csrf_token %}
+    </div>
 </body>
 
 <script>
@@ -36,9 +42,14 @@ const fetch_with_csrf = async (endpoint, fields={}) => {
 }
 
 const refreshGameState = async () => {
-	const resp = await fetch_with_csrf("{% url 'controller_game_state' game.code %}").then(r => r.text());
+	const gameState = await fetch_with_csrf("{% url 'controller_game_state' game.code %}").then(r => r.text());
+    const gamePos = await fetch_with_csrf("{% url 'controller_game_position' game.code %}").then(r => r.json());
+    console.log(gamePos);
+    console.log(gamePos["next"]);
 	
-	document.querySelector("#game-state").innerHTML = resp;
+	document.querySelector("#game-state").innerHTML = gameState;
+    document.querySelector("#next-btn").innerHTML = `${gamePos["next"]} ➡️`;
+    document.querySelector("#prev-btn").innerHTML = `⬅️ ${gamePos["prev"]}`;
 }
 
 const refreshTeamList = async () => {
@@ -52,28 +63,29 @@ setInterval(refreshTeamList, 5000);
 refreshTeamList();
 refreshGameState();
 
-const nextQuestion = async () => {
-	const resp = await fetch_with_csrf("{% url 'game_action' game.code 'next-question' %}", {
+const next = async () => {
+	const resp = await fetch_with_csrf("{% url 'game_action' game.code 'next' %}", {
 		method: "POST",
 	});
 
 	refreshGameState();
 }
 
-const prevQuestion = async () => {
-	const resp = await fetch_with_csrf("{% url 'game_action' game.code 'prev-question' %}", {
+const prev = async () => {
+	const resp = await fetch_with_csrf("{% url 'game_action' game.code 'prev' %}", {
 		method: "POST",
 	});
 
 	refreshGameState();
 }
 
-const setRoom = async (room) => {
-	const resp = await fetch_with_csrf("/game/{{game.code}}/room/" + room, {
+const reset = async () => {
+	const resp = await fetch_with_csrf("{% url 'game_action' game.code 'reset' %}", {
 		method: "POST",
 	});
 
 	refreshGameState();
 }
+
 </script>
 <html>

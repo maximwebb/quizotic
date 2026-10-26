@@ -38,7 +38,10 @@ def create(request, game_code: str):
 def list(request, game_code: str):
     game = get_game_by_code(game_code)
     teams = Team.objects.filter(game=game)
-    cur_team = get_cur_team(request)
+    try:
+        cur_team = get_cur_team(request)
+    except:
+        cur_team = None
     return render(request, "teams/list.html", {"teams": teams, "cur_team": cur_team})
 
 
