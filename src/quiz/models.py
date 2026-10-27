@@ -16,6 +16,7 @@ class Team(models.Model):
 class Question(models.Model):
     prompt = models.CharField(max_length=256)
     points = models.IntegerField(default=0)
+    image = models.ImageField(upload_to="quiz", blank=True, null=True)
 
     class Type(models.IntegerChoices):
         MCQ = 1

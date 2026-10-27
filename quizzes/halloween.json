@@ -1,0 +1,50 @@
+{
+    "name": "Halloween 2026",
+    "rounds": [
+        {
+            "name": "Lightning Round",
+            "questions": [
+                {
+                    "type": "mcq",
+                    "prompt": "What quality in a mistress did Benjamin Franklin suggest his friend look for?",
+                    "choices": [
+                        "Younger",
+                        "Older",
+                        "Married",
+                        "Catholic"
+                    ],
+                    "answer": "Older",
+                    "points": 1,
+                    "image": "quiz/halloween/franklin.jpeg"
+                },
+                {
+                    "type": "mcq",
+                    "prompt": "What type of animal did Thomas Edison electrocute to portray AC as dangerous?",
+                    "choices": [
+                        "Dog",
+                        "Monkey",
+                        "Elephant",
+                        "Rat"
+                    ],
+                    "answer": "Elephant",
+                    "points": 1,
+                    "image": "quiz/halloween/cat_electrician.jpeg"
+                },
+                {
+                    "type": "mcq",
+                    "prompt": "Grease lightning (TODO)",
+                    "choices": [
+                        "Dog",
+                        "Monkey",
+                        "Elephant",
+                        "Rat"
+                    ],
+                    "answer": "Elephant",
+                    "points": 1,
+                    "image": "quiz/halloween/cat_electrician.jpeg"
+                }
+            ]
+        }
+    ]
+}
+

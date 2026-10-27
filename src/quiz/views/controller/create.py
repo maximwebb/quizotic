@@ -69,10 +69,11 @@ def create_quiz_from_json(raw):
             prompt = q["prompt"]
             marking = Question.Marking.from_str(q["marking"]) if "marking" in q else Question.Marking.NONE
             points = q["points"] if "points" in q else 0
+            image = q["image"] if "image" in q else None
 
             match q["type"]:
                 case "mcq":
-                    question = MultiChoiceQuestion(prompt=prompt, marking_type=Question.Marking.AUTO, points=points)
+                    question = MultiChoiceQuestion(prompt=prompt, marking_type=Question.Marking.AUTO, points=points, image=image)
                     question.save()
 
                     ans = q["answer"]
@@ -89,7 +90,8 @@ def create_quiz_from_json(raw):
                     question = TextboxQuestion(
                         prompt=prompt,
                         marking_type=marking,
-                        points=0 if marking == Question.Marking.VOTE else points)
+                        points=0 if marking == Question.Marking.VOTE else points,
+                        image=image)
                     question.save()
 
                 case _:
