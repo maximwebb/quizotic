@@ -1,0 +1,28 @@
+{% load static %}
+<!doctype html>
+<html>
+<head>
+    <script src="{% static 'js/sse.js' %}"> </script>
+    <link rel="stylesheet" href="{% static 'css/common.css' %}"></link>
+    <link rel="stylesheet" href="{% static 'css/textbox.css' %}"></link>
+</head>
+
+<style>
+#meme {
+    margin-left: 5vh;
+    width: 40vh;
+    height: 40vh;
+}
+</style>
+
+<body class="wide-body fixed-height">
+    <div class="content shimmer">
+        <div class="question-container">
+            <p class="question-title">{{ question.prompt }}</p>
+        </div>
+        {% if question.image %}
+        <img id="meme" src="{% get_media_prefix %}{{ question.image }}"</img>
+        {% endif %}
+    </div>
+</body>
+</html>

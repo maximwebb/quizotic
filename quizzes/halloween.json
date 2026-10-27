@@ -3,6 +3,7 @@
     "rounds": [
         {
             "name": "Lightning Round",
+            "image": "electro_wizard.gif",
             "questions": [
                 {
                     "type": "mcq",
@@ -42,6 +43,54 @@
                     "answer": "Elephant",
                     "points": 1,
                     "image": "quiz/halloween/cat_electrician.jpeg"
+                }
+            ]
+        },
+        {
+            "name": "Snap crackle pop",
+            "image": "quiz/halloween/snap_crackle_pop.webp",
+            "questions": [
+                {
+                    "type": "textbox",
+                    "prompt": "What conspiracy theory does Markus Walder belive in?",
+                    "marking": "vote",
+                    "points": 4,
+                    "image": "quiz/halloween/markus.png"
+                },
+                {
+                    "type": "textbox",
+                    "prompt": "What is Sophie's favourite way to make a quick buck?",
+                    "marking": "vote",
+                    "points": 4,
+                    "image": "quiz/halloween/sophie.png"
+                },
+                {
+                    "type": "textbox",
+                    "prompt": "How does Ben like to impress on a first date?",
+                    "marking": "vote",
+                    "points": 4,
+                    "image": "quiz/halloween/ben.png"
+                },
+                {
+                    "type": "textbox",
+                    "prompt": "How would Siana take revenge on a coworker?",
+                    "marking": "vote",
+                    "points": 4,
+                    "image": "quiz/halloween/siana.png"
+                },
+                {
+                    "type": "textbox",
+                    "prompt": "What will you never hear Max admit?",
+                    "marking": "vote",
+                    "points": 4,
+                    "image": "quiz/halloween/max.png"
+                },
+                {
+                    "type": "textbox",
+                    "prompt": "How would Maxim most likely end up in jail?",
+                    "marking": "vote",
+                    "points": 4,
+                    "image": "quiz/halloween/maxim.png"
                 }
             ]
         }

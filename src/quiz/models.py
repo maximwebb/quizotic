@@ -95,6 +95,7 @@ class VoteQuestion(Question):
 
 class Round(models.Model):
     name = models.CharField(max_length=128, blank=True)
+    image = models.ImageField(blank=True, null=True)
     questions = models.ManyToManyField(
         Question, through=RoundQuestion, related_name="+")
 

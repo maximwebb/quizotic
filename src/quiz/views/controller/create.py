@@ -56,7 +56,9 @@ def create_quiz_from_json(raw):
     quiz = Quiz(name=data["name"])
     quiz.save()
     for r_num, r in enumerate(data["rounds"]):
-        round = Round(name=r["name"])
+        name = r["name"]
+        image = r["image"] if "image" in r else None
+        round = Round(name=name, image=image)
         round.save()
 
         ord_round = QuizRound(quiz=quiz, round=round, order=r_num)

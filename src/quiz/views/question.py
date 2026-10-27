@@ -78,6 +78,8 @@ def textbox_view(request, game_code: str, is_presenter=False):
         form = TextboxForm()
         context = {"question": question, "form": form, "is_presenter": is_presenter}
 
+        if is_presenter:
+            return render(request, "presenter/textbox.html", context)
         return render(request, "quiz/textbox.html", context)
     else:
         return HttpResponseNotFound()
