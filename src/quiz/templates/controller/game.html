@@ -8,7 +8,7 @@
 </head>
 <body class="std-body var-height">
     <div class="content">
-    <p class="title-3">Game Control Panel {{ game.code }}</p>
+        <p class="title-3">Game Control Panel <a href="{% url 'presenter' game.code %}" target="_blank">{{ game.code }}</a></p>
 	
 	<div id = "nav">
 	    <div id = "game-state">

@@ -31,6 +31,8 @@ def presenter_lobby(request, game):
 
 def presenter_round_start(request, game):
     context = {"game": game, "round_name": game.cur_round.name}
+    if game.cur_round.image is not None:
+        context["image"] = game.cur_round.image
 
     return render(request, "presenter/round_start.html", context)
 

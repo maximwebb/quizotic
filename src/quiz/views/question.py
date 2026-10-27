@@ -50,8 +50,9 @@ def mcq_view(request, game_code: str, is_presenter=False):
         choices = Choice.objects.all().filter(question=question.id)
         form = MCQForm(choices)
         context = {"question": question, "form": form, "is_presenter": is_presenter}
-        print(context)
 
+        if is_presenter:
+            return render(request, "presenter/mcq.html", context)
         return render(request, "quiz/mcq.html", context)
     else:
         return HttpResponseNotFound()
@@ -77,6 +78,8 @@ def textbox_view(request, game_code: str, is_presenter=False):
         form = TextboxForm()
         context = {"question": question, "form": form, "is_presenter": is_presenter}
 
+        if is_presenter:
+            return render(request, "presenter/textbox.html", context)
         return render(request, "quiz/textbox.html", context)
     else:
         return HttpResponseNotFound()
