@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-v3o@o@uq)rvdngx4$m%i!r19%aw5cauy5-1#*u(n_vfhy&$qg5
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['quiz.maximwebbsite.com']
 
 
 # Application definition
@@ -118,13 +118,15 @@ USE_I18N = True
 USE_TZ = True
 
 # Media files (e.g. images)
-MEDIA_ROOT = 'media'
+MEDIA_URL = 'media/'
+MEDIA_ROOT = '/var/www/quiz.maximwebbsite.com/media'
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = '/quiz/static/'
+STATIC_URL = 'static/'
+STATIC_ROOT = '/var/www/quiz.maximwebbsite.com/static'
 
 
 # Default primary key field type
