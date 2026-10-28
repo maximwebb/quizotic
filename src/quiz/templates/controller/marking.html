@@ -10,7 +10,7 @@
     <div class="content">
         <p id="title" class="title-3">Mark User Submissions</p>
         <a class="btn-small" href="{% url 'controller_game' game.code %}">Back</a>
-        <div id="submission-list">
+        <div id="unmarked-list">
             {% if unmarked_text|length == 0 %}
             <p>All done!</p>
             {% endif %}
@@ -21,6 +21,18 @@
                     <button class="mark-btn correct-btn" onclick="markSubmission({{v.submission.id}}, true)">✔️</button>
                     <button class="mark-btn incorrect-btn" onclick="markSubmission({{v.submission.id}}, false)">✘</button>
                 </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <p class="title-3">All Submissions</p>
+        <div id="all-submissions">
+            {% for q in questions %}
+            <div class="submission">
+                <p class="title-4">{{q.prompt}}</p>
+                {% for sub in q.subs %}
+                <p><b>{{sub.team_name}}</b>: {{sub.text}} ({{sub.status}})</p>
+                {% endfor %}
             </div>
             {% endfor %}
         </div>
