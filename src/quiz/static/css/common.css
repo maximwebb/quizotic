@@ -39,8 +39,9 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    max-width: 60vh;
+    max-width: 55vh;
     padding: 20px;
+    box-sizing: border-box;
 }
 
 .wide-body {
@@ -51,6 +52,7 @@
     align-items: center;
     max-width: 110vh;
     padding: 20px;
+    box-sizing: border-box;
 }
 
 .fixed-height {

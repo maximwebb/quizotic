@@ -182,15 +182,17 @@ const clearCanvas = () => {
 
 const onFinish = (e) => {
     [prevX, prevY] = [null, null];
-    canvas.removeEventListener("mousemove", draw);
-    canvas.removeEventListener("mouseup", onFinish);
+    canvas.removeEventListener("pointermove", draw);
+    canvas.removeEventListener("pointerup", onFinish);
+    canvas.removeEventListener("pointercancel", onFinish);
 }
 
 
-canvas.addEventListener("mousedown", (e) => {
+canvas.addEventListener("pointerdown", (e) => {
     if (drawMode == Mode.BRUSH) {
-        canvas.addEventListener("mousemove", draw);
-        canvas.addEventListener("mouseup", onFinish);
+        canvas.addEventListener("pointermove", draw);
+        canvas.addEventListener("pointerup", onFinish);
+        canvas.addEventListener("pointercancel", onFinish);
     }
     else if (drawMode == Mode.FILL) {
         fill(e);

@@ -1,4 +1,10 @@
 /* General */
+#cv {
+    touch-action: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
 #controls * {
    margin: 0.3vh 0; 
 }
