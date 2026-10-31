@@ -21,5 +21,9 @@ def quiz_view(request, game_code: str):
             return question.question_view(request, game_code)
         case GameState.Room.SCOREBOARD:
             return scoring.scoreboard_view(request, game_code)
+        case GameState.Room.ROUND_START:
+            context = {"game": gs, "round_name": gs.cur_round.name}
+            return render(request, "quiz/round_start.html", context)
         case _:
+            print("wut")
             return scoring.scoreboard_view(request, game_code)
