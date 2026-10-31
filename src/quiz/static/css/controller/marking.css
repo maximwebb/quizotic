@@ -37,6 +37,10 @@
     background-color: var(--green);
 }
 
+.half-btn {
+    background-color: var(--amber);
+}
+
 .incorrect-btn {
     background-color: var(--red);
 }

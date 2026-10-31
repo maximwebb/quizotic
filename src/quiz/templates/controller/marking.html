@@ -19,6 +19,7 @@
                 <p><b>{{v.submission.team.team_name}}</b>: {{v.text}}</p>
                 <div class="buttons">
                     <button class="mark-btn correct-btn" onclick="markSubmission({{v.submission.id}}, true)">✔️</button>
+                    <button class="mark-btn half-btn" onclick="markSubmission({{v.submission.id}}, 'half')">½</button>
                     <button class="mark-btn incorrect-btn" onclick="markSubmission({{v.submission.id}}, false)">✘</button>
                 </div>
             </div>

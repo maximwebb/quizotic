@@ -2,8 +2,21 @@
     "name": "Halloween 2026",
     "rounds": [
         {
+            "name": "Electro Music",
+            "image": "quiz/halloween/rza.png",
+            "questions": [
+                {
+                    "type": "textbox",
+                    "prompt": "Song 1",
+                    "marking": "host",
+                    "points": 4,
+                    "image": "quiz/halloween/franklin.jpeg"
+                }
+            ]
+        },
+        {
             "name": "Lightning Round",
-            "image": "electro_wizard.gif",
+            "image": "quiz/halloween/electro_wizard.gif",
             "questions": [
                 {
                     "type": "mcq",

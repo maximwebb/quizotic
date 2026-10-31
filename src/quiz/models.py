@@ -143,6 +143,7 @@ class Submission(models.Model):
         PENDING = 1, "pending"
         CORRECT = 2, "correct"
         INCORRECT = 3, "incorrect"
+        HALF = 4, "half"
 
     status = models.IntegerField(choices=Status, default=Status.PENDING)
 

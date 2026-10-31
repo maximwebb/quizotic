@@ -25,7 +25,8 @@ SECRET_KEY = 'django-insecure-v3o@o@uq)rvdngx4$m%i!r19%aw5cauy5-1#*u(n_vfhy&$qg5
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['quiz.maximwebbsite.com']
+ALLOWED_HOSTS = ['quiz.maximwebbsite.com', 'https://quiz.maximwebbsite.com']
+CSRF_TRUSTED_ORIGINS = ['https://quiz.maximwebbsite.com']
 
 
 # Application definition

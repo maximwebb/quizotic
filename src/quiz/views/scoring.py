@@ -43,7 +43,13 @@ def get_round_score(team, round, game) -> int:
         match question.marking_type:
             # Get all auto/host-marked scores:
             case Question.Marking.AUTO | Question.Marking.HOST:
-                res += question.points if sub.status == Submission.Status.CORRECT else 0
+                match sub.status:
+                    case Submission.Status.CORRECT:
+                        res += question.points
+                    case Submission.Status.HALF:
+                        res += question.points // 2
+                    case _:
+                        pass
             # Get all user-voted scores:
             case Question.Marking.VOTE:
                 try:
@@ -66,11 +72,9 @@ def get_round_score(team, round, game) -> int:
 def get_winning_team(game):
     top_score, top_team = 0, None
     for team in Team.objects.all().filter(game=game):
-        score = get_total_score(team, game) 
+        score = get_total_score(team, game)
         if score > top_score:
             top_score = score
             top_team = team
             print(f"{top_score}, {top_team}")
     return top_team
-
-

@@ -10,12 +10,19 @@ from django.urls import reverse
 def index(request, game_code: str):
     if request.method == "POST":
         submission_id = request.POST["submission_id"]
-        is_correct = parse_bool(request.POST["is_correct"])
-        if is_correct is None:
-            print(f"Error parsing `is_correct`: {request.POST['is_correct']}")
-            return HttpResponseBadRequest()
+        is_correct = request.POST["is_correct"].lower()
+        match is_correct:
+            case "true":
+                status = Submission.Status.CORRECT
+            case "false":
+                status = Submission.Status.INCORRECT
+            case "half":
+                status = Submission.Status.HALF
+            case _:
+                print(f"Error parsing `is_correct`: {request.POST['is_correct']}")
+                return HttpResponseBadRequest()
         submission = Submission.objects.get(id=submission_id)
-        submission.status = Submission.Status.CORRECT if is_correct else Submission.Status.INCORRECT
+        submission.status = status
         submission.save()
 
         return HttpResponse()
@@ -31,7 +38,7 @@ def index(request, game_code: str):
 
 def get_round_submissions(game):
     res = []
-    for q_i in range(game.question_num+1):
+    for q_i in range(game.question_num + 1):
         q = RoundQuestion.objects.get(round=game.cur_round, order=q_i)
         subs = []
         for s in Submission.objects.filter(question=q.id):
